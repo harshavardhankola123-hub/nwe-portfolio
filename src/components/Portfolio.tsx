@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { motion, useScroll, useTransform, useMotionValue, useSpring, MotionStyle } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { ArrowUpRight, Github, Linkedin, Mail, Phone } from "lucide-react";
@@ -268,6 +269,44 @@ function Poster({ colors, label, no }: { colors: string[]; label: string; no: st
   );
 }
 
+function ProfileCard() {
+  return (
+    <article
+      tabIndex={0}
+      aria-label="Reveal Harshavardhan's portrait"
+      className="group relative mt-12 min-h-80 overflow-hidden border border-foreground/20 bg-ink text-paper outline-none transition-transform duration-500 hover:-rotate-1 focus:-rotate-1 md:mt-0 md:min-h-[30rem]"
+    >
+      <div className="absolute inset-0 grain opacity-60" />
+      <div className="relative z-10 flex h-full min-h-80 flex-col justify-between p-5 md:min-h-[30rem]">
+        <div className="flex items-center justify-between font-mono text-[10px] uppercase tracking-widest text-paper/70">
+          <span>Portrait · 001</span>
+          <span>Hover / Focus</span>
+        </div>
+        <div>
+          <p className="font-mono text-xs uppercase tracking-widest text-accent">Kola Harshavardhan</p>
+          <h3 className="mt-3 max-w-xs font-display text-5xl font-medium leading-[0.88] tracking-tight md:text-6xl">
+            The person behind the systems.
+          </h3>
+        </div>
+      </div>
+      <div className="absolute inset-0 translate-y-full opacity-0 transition-all duration-700 ease-out group-hover:translate-y-0 group-hover:opacity-100 group-focus:translate-y-0 group-focus:opacity-100">
+        <Image
+          src="/images/harshavardhan.webp"
+          alt="Portrait of Kola Harshavardhan wearing glasses and a white shirt"
+          fill
+          sizes="(min-width: 768px) 33vw, 100vw"
+          className="object-cover object-center grayscale transition-transform duration-1000 group-hover:scale-105 group-focus:scale-105"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-ink/80 via-transparent to-transparent" />
+        <div className="absolute inset-x-5 bottom-5 flex items-end justify-between font-mono text-[10px] uppercase tracking-widest text-paper">
+          <span>Design engineer / AI builder</span>
+          <span>↗</span>
+        </div>
+      </div>
+    </article>
+  );
+}
+
 function Skills() {
   return (
     <section className="relative bg-ink py-24 text-paper md:py-32">
@@ -405,13 +444,19 @@ export function Portfolio() {
       <Hero />
       <Marquee items={["Adaptive Systems", "Generative AI", "Kinetic Editorial", "React Interfaces", "Motion Studies", "Visual Systems"]} />
       <section className="bg-paper">
-        <div className="px-6 pt-24 md:px-10">
-          <div className="flex items-center gap-4 font-mono text-xs uppercase tracking-widest text-muted-foreground">
-            <span>§ 02</span><span className="h-px flex-1 bg-foreground/20" /><span>Selected Work · 2024—2026</span>
+        <div className="pt-24" />
+        <div className="grid grid-cols-1 gap-8 px-6 pb-16 md:grid-cols-12 md:items-end md:px-10">
+          <div className="md:col-span-7">
+            <div className="flex items-center gap-4 font-mono text-xs uppercase tracking-widest text-muted-foreground">
+              <span>§ 02</span><span className="h-px flex-1 bg-foreground/20" /><span>Selected Work · 2024—2026</span>
+            </div>
+            <h2 className="mt-6 font-display text-6xl font-medium leading-[0.9] tracking-tight md:text-8xl">
+              <span className="font-serif italic text-accent">Projects</span>
+            </h2>
           </div>
-          <h2 className="mt-6 font-display text-6xl font-medium leading-[0.9] tracking-tight md:text-8xl">
-            <span className="font-serif italic text-accent">Projects</span>
-          </h2>
+          <div className="md:col-span-4 md:col-start-9">
+            <ProfileCard />
+          </div>
         </div>
         {projects.map((p, i) => <ProjectCard key={p.no} p={p} i={i} />)}
       </section>
