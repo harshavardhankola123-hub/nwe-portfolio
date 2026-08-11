@@ -19,12 +19,13 @@ const projects = [
   {
     no: "02",
     year: "2025",
-    title: "Electricity Bill Generator",
-    tag: "OCR / Forecasting / LLM",
+    title: "MedMind AI",
+    tag: "Healthcare / Conversational AI",
+    url: "https://medimind-ai-project-phi.vercel.app",
     blurb:
-      "From a photographed meter to a forecasted bill — OCR ingestion, slab-aware tariff math, anomaly detection, and a natural-language explainer that turns volatility into advice.",
-    pillars: ["Intelligent OCR Extraction", "Dynamic Billing Logic", "Predictive Analytics", "Generative AI Insights", "Interactive Dashboard"],
-    palette: ["#e8d84a", "#0a0a0a", "#f5f1e8"],
+      "A thoughtful medical AI companion that understands symptoms and health context — turning complex information into clear guidance, useful next steps, and a calmer care journey.",
+    pillars: ["Medical Knowledge Support", "Symptom Context Understanding", "Personalized Guidance", "Conversational AI", "Accessible Health Dashboard"],
+    palette: ["#8ccfc9", "#0a0a0a", "#f5f1e8"],
   },
 ];
 
@@ -414,7 +415,7 @@ export function Portfolio() {
         </div>
         {projects.map((p, i) => <ProjectCard key={p.no} p={p} i={i} />)}
       </section>
-      <Marquee reverse items={["OCR · Tariff Math", "Learner Modeling", "LLM Feedback", "Predictive Analytics", "Process Layers", "Scrub the Timeline"]} />
+      <Marquee reverse items={["Medical Knowledge", "Learner Modeling", "Conversational Guidance", "Health Context", "Process Layers", "Care Journey"]} />
       <Skills />
       <About />
       <Contact />
