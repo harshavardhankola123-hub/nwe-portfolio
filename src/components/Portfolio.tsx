@@ -133,10 +133,6 @@ function Hero() {
         <span className="flicker text-accent">● rec</span>
       </div>
 
-      <div className="absolute left-6 top-24 z-20 w-48 md:left-10 md:top-28 md:w-64">
-        <ProfileCard />
-      </div>
-
       <motion.div style={{ y: y1, opacity: op }} className="relative z-10 px-6 pt-16 md:px-10 md:pt-24">
         <div className="flex items-baseline justify-between font-mono text-xs uppercase tracking-widest text-muted-foreground">
           <span>Issue №01 — Portfolio</span>
@@ -449,6 +445,11 @@ export function Portfolio() {
       <Marquee items={["Adaptive Systems", "Generative AI", "Kinetic Editorial", "React Interfaces", "Motion Studies", "Visual Systems"]} />
       <section className="bg-paper">
         <div className="pt-24" />
+        <div className="px-6 pb-16 md:px-10">
+          <div className="max-w-md md:ml-auto md:w-5/12">
+            <ProfileCard />
+          </div>
+        </div>
         <div className="grid grid-cols-1 gap-8 px-6 pb-16 md:grid-cols-12 md:items-end md:px-10">
           <div className="md:col-span-7">
             <div className="flex items-center gap-4 font-mono text-xs uppercase tracking-widest text-muted-foreground">
