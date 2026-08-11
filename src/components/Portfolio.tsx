@@ -133,7 +133,7 @@ function Hero() {
         <span className="flicker text-accent">● rec</span>
       </div>
 
-      <div className="absolute left-[52%] top-[30%] z-20 w-40 md:left-[62%] md:top-[27%] md:w-52 lg:w-56">
+      <div className="absolute left-6 top-24 z-20 w-48 md:left-10 md:top-28 md:w-64">
         <ProfileCard />
       </div>
 
@@ -278,10 +278,10 @@ function ProfileCard() {
     <article
       tabIndex={0}
       aria-label="Reveal Harshavardhan's portrait"
-      className="group relative mt-12 aspect-[4/5] overflow-hidden border border-foreground/20 bg-ink text-paper outline-none transition-transform duration-500 hover:-rotate-1 focus:-rotate-1 md:mt-0"
+      className="group relative mt-12 min-h-80 overflow-hidden border border-foreground/20 bg-ink text-paper outline-none transition-transform duration-500 hover:-rotate-1 focus:-rotate-1 md:mt-0 md:min-h-[30rem]"
     >
       <div className="absolute inset-0 grain opacity-60" />
-      <div className="relative z-10 flex h-full flex-col justify-between p-4 md:p-5">
+      <div className="relative z-10 flex h-full min-h-80 flex-col justify-between p-5 md:min-h-[30rem]">
         <div className="flex items-center justify-between font-mono text-[10px] uppercase tracking-widest text-paper/70">
           <span>Portrait · 001</span>
           <span>Hover / Focus</span>
