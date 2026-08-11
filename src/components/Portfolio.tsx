@@ -133,6 +133,10 @@ function Hero() {
         <span className="flicker text-accent">● rec</span>
       </div>
 
+      <div className="absolute left-[42%] top-[30%] z-20 w-40 md:left-[54%] md:top-[27%] md:w-52 lg:left-[50%] lg:w-56">
+        <ProfileCard />
+      </div>
+
       <motion.div style={{ y: y1, opacity: op }} className="relative z-10 px-6 pt-16 md:px-10 md:pt-24">
         <div className="flex items-baseline justify-between font-mono text-xs uppercase tracking-widest text-muted-foreground">
           <span>Issue №01 — Portfolio</span>
@@ -274,10 +278,10 @@ function ProfileCard() {
     <article
       tabIndex={0}
       aria-label="Reveal Harshavardhan's portrait"
-      className="group relative mt-12 min-h-80 overflow-hidden border border-foreground/20 bg-ink text-paper outline-none transition-transform duration-500 hover:-rotate-1 focus:-rotate-1 md:mt-0 md:min-h-[30rem]"
+      className="group relative mt-12 aspect-[4/5] overflow-hidden border border-foreground/20 bg-ink text-paper outline-none transition-transform duration-500 hover:-rotate-1 focus:-rotate-1 md:mt-0"
     >
       <div className="absolute inset-0 grain opacity-60" />
-      <div className="relative z-10 flex h-full min-h-80 flex-col justify-between p-5 md:min-h-[30rem]">
+      <div className="relative z-10 flex h-full flex-col justify-between p-4 md:p-5">
         <div className="flex items-center justify-between font-mono text-[10px] uppercase tracking-widest text-paper/70">
           <span>Portrait · 001</span>
           <span>Hover / Focus</span>
@@ -445,11 +449,6 @@ export function Portfolio() {
       <Marquee items={["Adaptive Systems", "Generative AI", "Kinetic Editorial", "React Interfaces", "Motion Studies", "Visual Systems"]} />
       <section className="bg-paper">
         <div className="pt-24" />
-        <div className="px-6 pb-16 md:px-10">
-          <div className="max-w-md md:ml-auto md:w-5/12">
-            <ProfileCard />
-          </div>
-        </div>
         <div className="grid grid-cols-1 gap-8 px-6 pb-16 md:grid-cols-12 md:items-end md:px-10">
           <div className="md:col-span-7">
             <div className="flex items-center gap-4 font-mono text-xs uppercase tracking-widest text-muted-foreground">
