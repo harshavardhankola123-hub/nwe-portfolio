@@ -133,7 +133,7 @@ function Hero() {
         <span className="flicker text-accent">● rec</span>
       </div>
 
-      <div className="absolute left-[52%] top-[30%] z-20 w-40 md:left-[62%] md:top-[27%] md:w-52 lg:w-56">
+      <div className="absolute left-[42%] top-[30%] z-20 w-40 md:left-[54%] md:top-[27%] md:w-52 lg:left-[50%] lg:w-56">
         <ProfileCard />
       </div>
 
