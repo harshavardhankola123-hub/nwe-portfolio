@@ -274,10 +274,10 @@ function ProfileCard() {
     <article
       tabIndex={0}
       aria-label="Reveal Harshavardhan's portrait"
-      className="group relative mt-12 aspect-[4/3] w-full max-w-sm overflow-hidden border border-foreground/20 bg-ink text-paper outline-none transition-transform duration-500 hover:-rotate-1 focus:-rotate-1 md:mt-0 md:ml-auto"
+      className="group relative mt-12 min-h-80 overflow-hidden border border-foreground/20 bg-ink text-paper outline-none transition-transform duration-500 hover:-rotate-1 focus:-rotate-1 md:mt-0 md:min-h-[30rem]"
     >
       <div className="absolute inset-0 grain opacity-60" />
-      <div className="relative z-10 flex h-full flex-col justify-between p-4 md:p-5">
+      <div className="relative z-10 flex h-full min-h-80 flex-col justify-between p-5 md:min-h-[30rem]">
         <div className="flex items-center justify-between font-mono text-[10px] uppercase tracking-widest text-paper/70">
           <span>Portrait · 001</span>
           <span>Hover / Focus</span>
