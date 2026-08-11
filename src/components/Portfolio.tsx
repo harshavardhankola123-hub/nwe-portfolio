@@ -445,11 +445,6 @@ export function Portfolio() {
       <Marquee items={["Adaptive Systems", "Generative AI", "Kinetic Editorial", "React Interfaces", "Motion Studies", "Visual Systems"]} />
       <section className="bg-paper">
         <div className="pt-24" />
-        <div className="px-6 pb-16 md:px-10">
-          <div className="max-w-md md:ml-auto md:w-5/12">
-            <ProfileCard />
-          </div>
-        </div>
         <div className="grid grid-cols-1 gap-8 px-6 pb-16 md:grid-cols-12 md:items-end md:px-10">
           <div className="md:col-span-7">
             <div className="flex items-center gap-4 font-mono text-xs uppercase tracking-widest text-muted-foreground">
@@ -458,6 +453,9 @@ export function Portfolio() {
             <h2 className="mt-6 font-display text-6xl font-medium leading-[0.9] tracking-tight md:text-8xl">
               <span className="font-serif italic text-accent">Projects</span>
             </h2>
+          </div>
+          <div className="md:col-span-4 md:col-start-9">
+            <ProfileCard />
           </div>
         </div>
         {projects.map((p, i) => <ProjectCard key={p.no} p={p} i={i} />)}
