@@ -133,6 +133,10 @@ function Hero() {
         <span className="flicker text-accent">● rec</span>
       </div>
 
+      <div className="absolute left-[42%] top-[30%] z-20 w-40 md:left-[54%] md:top-[27%] md:w-52 lg:left-[50%] lg:w-56">
+        <ProfileCard />
+      </div>
+
       <motion.div style={{ y: y1, opacity: op }} className="relative z-10 px-6 pt-16 md:px-10 md:pt-24">
         <div className="flex items-baseline justify-between font-mono text-xs uppercase tracking-widest text-muted-foreground">
           <span>Issue №01 — Portfolio</span>
@@ -274,7 +278,7 @@ function ProfileCard() {
     <article
       tabIndex={0}
       aria-label="Reveal Harshavardhan's portrait"
-      className="group relative mt-12 aspect-[4/3] w-full max-w-sm overflow-hidden border border-foreground/20 bg-ink text-paper outline-none transition-transform duration-500 hover:-rotate-1 focus:-rotate-1 md:mt-0 md:ml-auto"
+      className="group relative mt-12 aspect-[4/5] overflow-hidden border border-foreground/20 bg-ink text-paper outline-none transition-transform duration-500 hover:-rotate-1 focus:-rotate-1 md:mt-0"
     >
       <div className="absolute inset-0 grain opacity-60" />
       <div className="relative z-10 flex h-full flex-col justify-between p-4 md:p-5">
@@ -453,9 +457,6 @@ export function Portfolio() {
             <h2 className="mt-6 font-display text-6xl font-medium leading-[0.9] tracking-tight md:text-8xl">
               <span className="font-serif italic text-accent">Projects</span>
             </h2>
-          </div>
-          <div className="md:col-span-4 md:col-start-9">
-            <ProfileCard />
           </div>
         </div>
         {projects.map((p, i) => <ProjectCard key={p.no} p={p} i={i} />)}
