@@ -534,7 +534,7 @@ export function Portfolio() {
             >
               {[
                 { title: "GenAI-Powered Data Analytics", issuer: "Tata / Forage · January 2026", image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-zTajONPA6bj5VXKPI8xF04ATYExRbD.png", href: "/certificates/tata-genai-powered-data-analytics.pdf" },
-                { title: "AI and n8n Internship", issuer: "Kairokume Pvt. Ltd. · June–July 2026", image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Screenshot%202026-09-17%20114933-68to8XbSLWE4dLXPXgcg6bTKQiMpLw.png", href: "/certificates/ai-n8n-internship.pdf" },
+                { title: "AI and n8n Internship", issuer: "Kairokume Pvt. Ltd. · June–July 2026", image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-WLKVE1QqSzO1KXoJrS0wt0izKEOcz2.png", href: "/certificates/ai-n8n-internship.pdf" },
                 { title: "AI Learning Lab", issuer: "Google Developer Experts · July 2026", image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-j2d9Eo0qGNMCctwOM4wC10kvfXbHcC.png", href: "/certificates/google-ai-learning-lab.pdf" },
               ].map((certificate) => (
                 <a key={certificate.title} href={certificate.href} target="_blank" rel="noreferrer" className="group border border-foreground/15 bg-background p-3 transition-transform duration-500 hover:-translate-y-2">
