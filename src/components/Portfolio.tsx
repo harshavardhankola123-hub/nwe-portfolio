@@ -309,16 +309,9 @@ function ProfileCard() {
           <span>Hover / Focus</span>
         </div>
         <div>
-          <p className="absolute left-5 top-16 z-20 max-w-[calc(100%-2.5rem)] border-l-2 border-accent bg-ink/75 px-3 py-2 font-mono text-sm font-semibold uppercase tracking-[0.18em] text-paper shadow-lg backdrop-blur-sm md:text-base">Kola Harshavardhan</p>
         </div>
       </div>
       <div className="absolute inset-0 translate-y-full opacity-0 transition-all duration-700 ease-out group-hover:translate-y-0 group-hover:opacity-100 group-focus:translate-y-0 group-focus:opacity-100">
-        <div
-          role="img"
-          aria-label="Kola Harshavardhan name plate"
-          className="absolute inset-x-3 top-3 z-20 h-24 bg-contain bg-left-top bg-no-repeat md:inset-x-5 md:top-5 md:h-28"
-          style={{ backgroundImage: "url(https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-NPaBLvDH7B4PSXunTzwKJ8IbOQmxZS.png)" }}
-        />
         <Image
           src="/images/harshavardhan.webp"
           alt="Portrait of Kola Harshavardhan wearing glasses and a white shirt"
