@@ -185,12 +185,12 @@ function CharacterAnimation({ heroRef, wordsRef }: { heroRef: React.RefObject<HT
 
   if (!ENABLE_CHARACTER_ANIMATION || reduceMotion || !points) return null;
   const { kola, harsha, vardhan } = points;
-  const start = kola.left - 24;
+  const start = kola.left;
   const exit = (heroRef.current?.getBoundingClientRect().width ?? 1000) + 48;
-  const x = [start, kola.right - 24, kola.right - 20, harsha.left - 24, harsha.right - 24, harsha.right - 18, vardhan.left - 24, vardhan.right - 24, exit];
-  const y = [kola.baseline, kola.baseline, kola.baseline - 58, harsha.baseline, harsha.baseline, harsha.baseline - 70, vardhan.baseline, vardhan.baseline, vardhan.baseline];
+  const x = [start, kola.right - 24, harsha.left - 24, harsha.right - 24, vardhan.left - 24, vardhan.right - 24, exit];
+  const y = [kola.baseline, kola.baseline, harsha.baseline, harsha.baseline, vardhan.baseline, vardhan.baseline, vardhan.baseline];
   return (
-    <motion.div aria-hidden="true" className="pointer-events-none absolute left-0 top-0 z-20 h-[clamp(24px,3vw,38px)] w-[clamp(16px,2vw,25px)] text-ink" initial={{ x: start, y: kola.baseline, opacity: 0 }} animate={{ x, y, opacity: [0, 1, 1, 1, 1, 1, 1, 1, 0], scaleY: [1, 1, 0.78, 1.12, 1, 0.76, 1.12, 1, 1], rotate: [0, 0, -10, 0, 0, -12, 0, 0, 0] }} transition={{ delay: 0.5, duration: 8.2, times: [0, .08, .22, .31, .5, .62, .7, .9, 1], ease: ["easeOut", "linear", "easeInOut", "easeOut", "linear", "easeInOut", "easeOut", "easeIn", "easeIn"] }}>
+    <motion.div aria-hidden="true" className="pointer-events-none absolute left-0 top-0 z-20 h-[clamp(24px,3vw,38px)] w-[clamp(16px,2vw,25px)] text-ink" initial={{ x: start, y: kola.baseline, opacity: 0 }} animate={{ x, y, opacity: [1, 1, 1, 1, 1, 1, 0], scaleY: [1, 1, 0.8, 1, 0.8, 1, 1], rotate: [0, 0, -12, 0, -12, 0, 0] }} transition={{ delay: 0.5, duration: 8.2, times: [0, .18, .34, .55, .68, .86, 1], ease: ["linear", "linear", "easeInOut", "linear", "easeInOut", "linear"] }}>
       <motion.div className="h-full w-full" animate={{ y: [0, -2, 0, -2, 0] }} transition={{ duration: 0.21, repeat: Infinity, ease: "easeInOut" }}><MiniCharacter /></motion.div>
     </motion.div>
   );
