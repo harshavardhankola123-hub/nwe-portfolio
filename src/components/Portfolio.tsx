@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { motion, useScroll, useTransform, useMotionValue, useSpring, MotionStyle } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { ArrowUpRight, Github, Linkedin, Mail, Phone } from "lucide-react";
@@ -296,30 +297,39 @@ function Poster({ colors, label, no }: { colors: string[]; label: string; no: st
 
 function ProfileCard() {
   return (
-    <a
-      href="/resume.docx"
-      target="_blank"
-      rel="noreferrer"
-      aria-label="Open Kola Harshavardhan's resume"
-      className="group relative mt-12 block min-h-80 overflow-hidden border border-foreground/20 bg-ink text-paper outline-none transition-transform duration-500 hover:-rotate-1 focus:-rotate-1 md:mt-0 md:min-h-[30rem]"
+    <article
+      tabIndex={0}
+      aria-label="Reveal Harshavardhan's portrait"
+      className="group relative mt-12 min-h-80 overflow-hidden border border-foreground/20 bg-ink text-paper outline-none transition-transform duration-500 hover:-rotate-1 focus:-rotate-1 md:mt-0 md:min-h-[30rem]"
     >
       <div className="absolute inset-0 grain opacity-60" />
       <div className="relative z-10 flex h-full min-h-80 flex-col justify-between p-5 md:min-h-[30rem]">
         <div className="flex items-center justify-between font-mono text-[10px] uppercase tracking-widest text-paper/70">
-          <span>Resume · 001</span>
-          <span>Open document ↗</span>
+          <span>Portrait · 001</span>
+          <span>Hover / Focus</span>
         </div>
         <div>
           <p className="font-mono text-xs uppercase tracking-widest text-accent">Kola Harshavardhan</p>
           <h3 className="mt-3 max-w-xs font-display text-5xl font-medium leading-[0.88] tracking-tight md:text-6xl">
-            My name, my work, my direction.
+            The person behind the systems.
           </h3>
-          <p className="mt-6 max-w-sm font-mono text-xs uppercase tracking-widest text-paper/60">
-            Click to open resume
-          </p>
         </div>
       </div>
-    </a>
+      <div className="absolute inset-0 translate-y-full opacity-0 transition-all duration-700 ease-out group-hover:translate-y-0 group-hover:opacity-100 group-focus:translate-y-0 group-focus:opacity-100">
+        <Image
+          src="/images/harshavardhan.webp"
+          alt="Portrait of Kola Harshavardhan wearing glasses and a white shirt"
+          fill
+          sizes="(min-width: 768px) 33vw, 100vw"
+          className="object-cover object-center grayscale transition-transform duration-1000 group-hover:scale-105 group-focus:scale-105"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-ink/80 via-transparent to-transparent" />
+        <div className="absolute inset-x-5 bottom-5 flex items-end justify-between font-mono text-[10px] uppercase tracking-widest text-paper">
+          <span>Design engineer / AI builder</span>
+          <span>↗</span>
+        </div>
+      </div>
+    </article>
   );
 }
 
