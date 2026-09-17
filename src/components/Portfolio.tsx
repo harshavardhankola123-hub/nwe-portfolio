@@ -468,7 +468,7 @@ export function Portfolio() {
       <ScrollProgress />
       <Cursor />
       <Hero />
-      <Marquee items={["Adaptive Systems", "Generative AI", "Kinetic Editorial", "React Interfaces", "Motion Studies", "Visual Systems"]} />
+      <Marquee items={["React Development", "Python Automation", "JavaScript Interfaces", "Java Applications", "AI Prototyping", "Workflow Automation"]} />
       <section className="bg-paper">
         <div className="pt-24" />
         <div className="grid grid-cols-1 gap-8 px-6 pb-16 md:grid-cols-12 md:items-end md:px-10">
@@ -486,7 +486,7 @@ export function Portfolio() {
         </div>
         {projects.map((p, i) => <ProjectCard key={p.no} p={p} i={i} />)}
       </section>
-      <Marquee reverse items={["Medical Knowledge", "Learner Modeling", "Conversational Guidance", "Health Context", "Process Layers", "Care Journey"]} />
+      <Marquee reverse items={["Adaptive Learning", "Conversational AI", "Medical AI Support", "Predictive Tracking", "LLM Feedback", "Accessible Dashboards"]} />
       <Skills />
       <About />
       <Contact />
