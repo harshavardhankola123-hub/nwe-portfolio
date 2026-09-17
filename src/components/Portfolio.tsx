@@ -460,6 +460,7 @@ function Contact() {
 
 export function Portfolio() {
   const [showProjects, setShowProjects] = useState(false);
+  const [showCertifications, setShowCertifications] = useState(false);
 
   return (
     <main className="relative">
@@ -501,6 +502,52 @@ export function Portfolio() {
               transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
             >
               {projects.map((p, i) => <ProjectCard key={p.no} p={p} i={i} />)}
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </section>
+      <section className="bg-paper px-6 py-24 md:px-10 md:py-32">
+        <div className="flex items-center gap-4 font-mono text-xs uppercase tracking-widest text-muted-foreground">
+          <span>§ 03</span><span className="h-px flex-1 bg-foreground/20" /><span>Certification Archive</span>
+        </div>
+        <button
+          type="button"
+          aria-expanded={showCertifications}
+          onClick={() => setShowCertifications((visible) => !visible)}
+          className="group mt-6 flex items-center gap-5 text-left"
+        >
+          <h2 className="font-display text-6xl font-medium leading-[0.9] tracking-tight md:text-8xl">
+            <span className="font-serif italic text-accent transition-colors group-hover:text-ink">Certifications</span>
+          </h2>
+          <span className="mt-3 font-mono text-xs uppercase tracking-widest text-muted-foreground">
+            {showCertifications ? "Hide ↑" : "Open ↓"}
+          </span>
+        </button>
+        <AnimatePresence initial={false}>
+          {showCertifications && (
+            <motion.div
+              initial={{ opacity: 0, y: -80 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -80 }}
+              transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+              className="mt-12 grid grid-cols-1 gap-6 md:grid-cols-3"
+            >
+              {[
+                { title: "GenAI-Powered Data Analytics", issuer: "Tata / Forage · January 2026", image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Screenshot%202026-09-17%20114913-RFg6FSNTLQWaIEJ74TRSfMW4UsZFHa.png", href: "/certificates/tata-genai-data-analytics.pdf" },
+                { title: "AI and n8n Internship", issuer: "Kairokume Pvt. Ltd. · June–July 2026", image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Screenshot%202026-09-17%20114933-68to8XbSLWE4dLXPXgcg6bTKQiMpLw.png", href: "/certificates/ai-n8n-internship.pdf" },
+                { title: "AI Learning Lab", issuer: "Google Developer Experts · July 2026", image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Screenshot%202026-09-17%20114913-RFg6FSNTLQWaIEJ74TRSfMW4UsZFHa.png", href: "/certificates/google-ai-learning-lab.pdf" },
+              ].map((certificate) => (
+                <a key={certificate.title} href={certificate.href} target="_blank" rel="noreferrer" className="group border border-foreground/15 bg-background p-3 transition-transform duration-500 hover:-translate-y-2">
+                  <div className="aspect-[4/3] overflow-hidden bg-muted">
+                    <img src={certificate.image} alt={`${certificate.title} certificate preview`} className="h-full w-full object-cover grayscale transition duration-500 group-hover:grayscale-0" />
+                  </div>
+                  <div className="px-2 pb-2 pt-5">
+                    <h3 className="font-display text-2xl font-medium leading-none">{certificate.title}</h3>
+                    <p className="mt-3 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">{certificate.issuer}</p>
+                    <p className="mt-5 font-mono text-[10px] uppercase tracking-widest text-accent">Open certificate ↗</p>
+                  </div>
+                </a>
+              ))}
             </motion.div>
           )}
         </AnimatePresence>
