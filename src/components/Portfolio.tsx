@@ -36,6 +36,32 @@ const skills = {
   Systems: ["Claude", "n8n", "GitHub"],
 };
 
+function ScrollProgress() {
+  const { scrollYProgress } = useScroll();
+
+  return (
+    <motion.div
+      aria-hidden="true"
+      className="fixed inset-x-0 top-0 z-[210] h-1 origin-left bg-accent"
+      style={{ scaleX: scrollYProgress }}
+    />
+  );
+}
+
+function Reveal({ children, className = "" }: { children: React.ReactNode; className?: string }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 28 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-80px" }}
+      transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+      className={className}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
 function Cursor() {
   const x = useMotionValue(-100);
   const y = useMotionValue(-100);
@@ -154,7 +180,7 @@ function Hero() {
       >
         <div className="md:col-span-5 md:col-start-1">
           <p className="font-serif text-3xl italic leading-tight md:text-5xl">
-            Design engineer building <span className="text-accent">adaptive systems</span>, generative interfaces, and kinetic editorial work.
+            React developer and AI builder crafting <span className="text-accent">intelligent interfaces</span> with Python, JavaScript, Java, automation, and thoughtful visual systems.
           </p>
         </div>
         <div className="md:col-span-4 md:col-start-9">
@@ -310,7 +336,7 @@ function ProfileCard() {
 function Skills() {
   return (
     <section className="relative bg-ink py-24 text-paper md:py-32">
-      <div className="px-6 md:px-10">
+      <Reveal className="px-6 md:px-10">
         <div className="flex items-center gap-4 font-mono text-xs uppercase tracking-widest text-paper/60">
           <span>§ 03</span><span className="h-px flex-1 bg-paper/20" /><span>Toolkit</span>
         </div>
@@ -333,7 +359,7 @@ function Skills() {
             </div>
           ))}
         </div>
-      </div>
+      </Reveal>
     </section>
   );
 }
@@ -341,7 +367,7 @@ function Skills() {
 function About() {
   return (
     <section className="relative bg-paper py-24 text-ink md:py-32">
-      <div className="grid grid-cols-12 gap-6 px-6 md:px-10">
+      <Reveal className="grid grid-cols-12 gap-6 px-6 md:px-10">
         <div className="col-span-12 md:col-span-4">
           <div className="flex items-center gap-4 font-mono text-xs uppercase tracking-widest text-muted-foreground">
             <span>§ 04</span><span className="h-px w-12 bg-foreground/20" /><span>Studio</span>
@@ -368,9 +394,8 @@ function About() {
 
         <div className="col-span-12 md:col-span-7 md:col-start-6">
           <p className="font-serif text-4xl italic leading-[1.05] md:text-6xl">
-            I work at the seam between{" "}
-            <span className="text-accent">software</span>, learning, and visual systems —
-            building interfaces that adapt, explain, and occasionally surprise the person using them.
+            I build at the seam between{" "}
+            <span className="text-accent">code</span>, AI, and visual systems — using React, Python, JavaScript, Java, and automation tools to make products that feel clear, useful, and alive.
           </p>
           <div className="mt-12 grid grid-cols-2 gap-6 border-t border-foreground/15 pt-6 font-mono text-xs uppercase tracking-widest md:grid-cols-4">
             {[
@@ -386,7 +411,7 @@ function About() {
             ))}
           </div>
         </div>
-      </div>
+      </Reveal>
     </section>
   );
 }
@@ -401,7 +426,7 @@ function Contact() {
   return (
     <section className="relative overflow-hidden bg-accent py-24 text-accent-foreground md:py-32">
       <div className="absolute inset-0 bg-grid opacity-30" />
-      <div className="relative px-6 md:px-10">
+      <Reveal className="relative px-6 md:px-10">
         <div className="flex items-center gap-4 font-mono text-xs uppercase tracking-widest opacity-70">
           <span>§ 05</span><span className="h-px flex-1 bg-current opacity-30" /><span>Commission</span>
         </div>
@@ -432,7 +457,7 @@ function Contact() {
           <span>© 2026 — Kola Harshavardhan</span>
           <span>Set in Space Grotesk · Instrument Serif</span>
         </div>
-      </div>
+      </Reveal>
     </section>
   );
 }
@@ -440,9 +465,10 @@ function Contact() {
 export function Portfolio() {
   return (
     <main className="relative">
+      <ScrollProgress />
       <Cursor />
       <Hero />
-      <Marquee items={["Adaptive Systems", "Generative AI", "Kinetic Editorial", "React Interfaces", "Motion Studies", "Visual Systems"]} />
+      <Marquee items={["React Development", "Python Automation", "JavaScript Interfaces", "Java Applications", "AI Prototyping", "Workflow Automation"]} />
       <section className="bg-paper">
         <div className="pt-24" />
         <div className="grid grid-cols-1 gap-8 px-6 pb-16 md:grid-cols-12 md:items-end md:px-10">
@@ -460,7 +486,7 @@ export function Portfolio() {
         </div>
         {projects.map((p, i) => <ProjectCard key={p.no} p={p} i={i} />)}
       </section>
-      <Marquee reverse items={["Medical Knowledge", "Learner Modeling", "Conversational Guidance", "Health Context", "Process Layers", "Care Journey"]} />
+      <Marquee reverse items={["Adaptive Learning", "Conversational AI", "Medical AI Support", "Predictive Tracking", "LLM Feedback", "Accessible Dashboards"]} />
       <Skills />
       <About />
       <Contact />
