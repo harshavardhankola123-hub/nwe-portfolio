@@ -321,7 +321,7 @@ function ProfileCard() {
         />
         <div className="absolute inset-0 bg-gradient-to-t from-ink/80 via-transparent to-transparent" />
         <div className="absolute inset-x-5 bottom-5 flex items-end justify-between font-mono text-[10px] uppercase tracking-widest text-paper">
-          <span>Design engineer / AI builder</span>
+          <span className="bg-ink/80 px-3 py-2 text-xs font-semibold tracking-[0.2em] text-paper backdrop-blur-sm">Kola Harshavardhan</span>
           <span>↗</span>
         </div>
       </div>
