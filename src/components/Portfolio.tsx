@@ -147,96 +147,58 @@ function MiniCharacter() {
   return (
     <svg viewBox="0 0 32 48" aria-hidden="true" className="h-full w-full overflow-visible">
       <circle cx="16" cy="7" r="5.5" fill="currentColor" />
-      <path d="M16 13v15" fill="none" stroke="currentColor" strokeLinecap="round" strokeWidth="2.4" />
-      <path className="runner-arm runner-arm-front" d="M16 17l8 5" fill="none" stroke="currentColor" strokeLinecap="round" strokeWidth="2.4" />
-      <path className="runner-arm runner-arm-back" d="M16 18l-7 5" fill="none" stroke="currentColor" strokeLinecap="round" strokeWidth="2.4" />
-      <path className="runner-leg runner-leg-front" d="M16 28l8 10" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.4" />
-      <path className="runner-leg runner-leg-back" d="M16 28l-8 10" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.4" />
-      <path d="M4 19h3M2 22h4" stroke="currentColor" strokeLinecap="round" strokeWidth="1.2" />
+      <motion.path d="M16 13v15" fill="none" stroke="currentColor" strokeLinecap="round" strokeWidth="2.4" />
+      <motion.path animate={{ rotate: [28, -34, 28] }} transition={{ duration: 0.42, repeat: Infinity, ease: "easeInOut" }} style={{ originX: "16px", originY: "18px" }} d="M16 17l8 5" fill="none" stroke="currentColor" strokeLinecap="round" strokeWidth="2.4" />
+      <motion.path animate={{ rotate: [-34, 28, -34] }} transition={{ duration: 0.42, repeat: Infinity, ease: "easeInOut" }} style={{ originX: "16px", originY: "18px" }} d="M16 18l-7 5" fill="none" stroke="currentColor" strokeLinecap="round" strokeWidth="2.4" />
+      <motion.path animate={{ rotate: [-38, 42, -38] }} transition={{ duration: 0.42, repeat: Infinity, ease: "easeInOut" }} style={{ originX: "16px", originY: "28px" }} d="M16 28l8 10" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.4" />
+      <motion.path animate={{ rotate: [42, -38, 42] }} transition={{ duration: 0.42, repeat: Infinity, ease: "easeInOut" }} style={{ originX: "16px", originY: "28px" }} d="M16 28l-8 10" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.4" />
     </svg>
   );
 }
 
-function CharacterAnimation({ heroRef, lettersRef }: { heroRef: React.RefObject<HTMLElement | null>; lettersRef: React.MutableRefObject<Record<string, HTMLSpanElement | null>> }) {
+type WordPoint = { left: number; right: number; baseline: number };
+
+function CharacterAnimation({ heroRef, wordsRef }: { heroRef: React.RefObject<HTMLElement | null>; wordsRef: React.MutableRefObject<Record<string, HTMLSpanElement | null>> }) {
   const reduceMotion = useReducedMotion();
-  const [points, setPoints] = useState<{ x: number; y: number }[]>([]);
-  const [running, setRunning] = useState(false);
+  const [points, setPoints] = useState<Record<string, WordPoint> | null>(null);
 
   useEffect(() => {
     if (!ENABLE_CHARACTER_ANIMATION || reduceMotion) return;
-
     const measure = () => {
       const hero = heroRef.current;
       if (!hero) return;
       const heroRect = hero.getBoundingClientRect();
-      const next = ["K", "A1", "H", "A2", "N"].map((letter) => {
-        const rect = lettersRef.current[letter]?.getBoundingClientRect();
-        return rect
-          ? { x: rect.left - heroRect.left - 2, y: rect.bottom - heroRect.top - 40 }
-          : { x: 0, y: 0 };
-      });
-      setPoints(next);
+      const next: Record<string, WordPoint> = {};
+      for (const name of ["kola", "harsha", "vardhan"]) {
+        const rect = wordsRef.current[name]?.getBoundingClientRect();
+        if (rect) next[name] = { left: rect.left - heroRect.left, right: rect.right - heroRect.left, baseline: rect.bottom - heroRect.top - 38 };
+      }
+      if (Object.keys(next).length === 3) setPoints(next);
     };
-
     measure();
     const observer = new ResizeObserver(measure);
     if (heroRef.current) observer.observe(heroRef.current);
     window.addEventListener("resize", measure);
-    return () => {
-      observer.disconnect();
-      window.removeEventListener("resize", measure);
-    };
-  }, [heroRef, reduceMotion, lettersRef]);
+    window.addEventListener("orientationchange", measure);
+    return () => { observer.disconnect(); window.removeEventListener("resize", measure); window.removeEventListener("orientationchange", measure); };
+  }, [heroRef, wordsRef, reduceMotion]);
 
-  if (!ENABLE_CHARACTER_ANIMATION || reduceMotion || points.length !== 5) return null;
-
-  const [k, a1, h, a2, n] = points;
-  const x = [k.x, a1.x, h.x, a2.x, n.x, "calc(100vw + 60px)"];
-  const y = [k.y, a1.y, h.y, a2.y, n.y, n.y];
-
+  if (!ENABLE_CHARACTER_ANIMATION || reduceMotion || !points) return null;
+  const { kola, harsha, vardhan } = points;
+  const start = kola.left - 24;
+  const exit = (heroRef.current?.getBoundingClientRect().width ?? 1000) + 48;
+  const x = [start, kola.right - 24, kola.right - 20, harsha.left - 24, harsha.right - 24, harsha.right - 18, vardhan.left - 24, vardhan.right - 24, exit];
+  const y = [kola.baseline, kola.baseline, kola.baseline - 58, harsha.baseline, harsha.baseline, harsha.baseline - 70, vardhan.baseline, vardhan.baseline, vardhan.baseline];
   return (
-    <>
-      <button
-        type="button"
-        aria-label="Start the runner animation"
-        onClick={() => setRunning(true)}
-        style={{ left: k.x, top: k.y - 8 }}
-        className="absolute z-30 h-16 w-16 cursor-pointer bg-transparent"
-      />
-      {running && (
-        <motion.div
-          aria-hidden="true"
-          className="pointer-events-none absolute left-0 top-0 z-20 h-[clamp(28px,3vw,42px)] w-[clamp(19px,2vw,28px)] text-ink"
-          initial={{ x: k.x, y: k.y, opacity: 1 }}
-          animate={{
-            x,
-            y,
-            opacity: [1, 1, 1, 1, 1, 0],
-            scale: [1, 1.08, 1, 1.08, 1, 1],
-            rotate: [0, -8, 8, -8, 8, 0],
-          }}
-          transition={{
-            duration: 7,
-            ease: ["linear", "easeOut", "linear", "easeOut", "linear"],
-            times: [0, 0.22, 0.42, 0.6, 0.78, 1],
-          }}
-        >
-          <motion.div
-            className="h-full w-full"
-            animate={{ y: [0, -2, 0, -2, 0] }}
-            transition={{ duration: 0.28, repeat: Infinity, ease: "easeInOut" }}
-          >
-            <MiniCharacter />
-          </motion.div>
-        </motion.div>
-      )}
-    </>
+    <motion.div aria-hidden="true" className="pointer-events-none absolute left-0 top-0 z-20 h-[clamp(24px,3vw,38px)] w-[clamp(16px,2vw,25px)] text-ink" initial={{ x: start, y: kola.baseline, opacity: 0 }} animate={{ x, y, opacity: [0, 1, 1, 1, 1, 1, 1, 1, 0], scaleY: [1, 1, 0.78, 1.12, 1, 0.76, 1.12, 1, 1], rotate: [0, 0, -10, 0, 0, -12, 0, 0, 0] }} transition={{ delay: 0.5, duration: 8.2, times: [0, .08, .22, .31, .5, .62, .7, .9, 1], ease: ["easeOut", "linear", "easeInOut", "easeOut", "linear", "easeInOut", "easeOut", "easeIn", "easeIn"] }}>
+      <motion.div className="h-full w-full" animate={{ y: [0, -2, 0, -2, 0] }} transition={{ duration: 0.21, repeat: Infinity, ease: "easeInOut" }}><MiniCharacter /></motion.div>
+    </motion.div>
   );
 }
 
 function Hero() {
   const ref = useRef<HTMLDivElement>(null);
-  const lettersRef = useRef<Record<string, HTMLSpanElement | null>>({});
+  const wordsRef = useRef<Record<string, HTMLSpanElement | null>>({});
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
   const y1 = useTransform(scrollYProgress, [0, 1], [0, -200]);
   const y2 = useTransform(scrollYProgress, [0, 1], [0, 120]);
@@ -255,7 +217,7 @@ function Hero() {
       </div>
 
       <motion.div style={{ y: y1, opacity: op }} className="relative z-10 px-6 pt-16 md:px-10 md:pt-24">
-        <CharacterAnimation heroRef={ref} lettersRef={lettersRef} />
+        <CharacterAnimation heroRef={ref} wordsRef={wordsRef} />
         <div className="flex items-baseline justify-between font-mono text-xs uppercase tracking-widest text-muted-foreground">
           <span>Issue №01 — Portfolio</span>
           <span>B.Tech ECE · CGPA 8.9</span>
@@ -263,13 +225,13 @@ function Hero() {
 
         <h1 className="mt-10 font-display font-medium hero-title">
           <span className="block">
-            <span ref={(node) => { lettersRef.current.K = node; }} className="cursor-pointer">K</span>OL<span ref={(node) => { lettersRef.current.A1 = node; }}>A</span>
+            <span ref={(node) => { wordsRef.current.kola = node; }}>KOLA</span>
           </span>
           <span className="block text-stroke">
-            <span ref={(node) => { lettersRef.current.H = node; }}>H</span>ARSH<span ref={(node) => { lettersRef.current.A2 = node; }}>A</span>&mdash;
+            <span ref={(node) => { wordsRef.current.harsha = node; }}>HARSHA</span>&mdash;
           </span>
           <span className="block">
-            VARDHA<span ref={(node) => { lettersRef.current.N = node; }}>N</span><span className="text-accent">.</span>
+            <span ref={(node) => { wordsRef.current.vardhan = node; }}>VARDHAN</span><span className="text-accent">.</span>
           </span>
         </h1>
       </motion.div>
