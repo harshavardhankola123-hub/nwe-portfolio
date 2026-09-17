@@ -310,9 +310,6 @@ function ProfileCard() {
         </div>
         <div>
           <p className="font-mono text-xs uppercase tracking-widest text-accent">Kola Harshavardhan</p>
-          <h3 className="mt-3 max-w-xs font-display text-5xl font-medium leading-[0.88] tracking-tight md:text-6xl">
-            The person behind the systems.
-          </h3>
         </div>
       </div>
       <div className="absolute inset-0 translate-y-full opacity-0 transition-all duration-700 ease-out group-hover:translate-y-0 group-hover:opacity-100 group-focus:translate-y-0 group-focus:opacity-100">
