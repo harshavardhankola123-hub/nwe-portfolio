@@ -157,9 +157,10 @@ function MiniCharacter() {
   );
 }
 
-function CharacterAnimation({ heroRef, wordsRef }: { heroRef: React.RefObject<HTMLElement | null>; wordsRef: React.MutableRefObject<Record<string, HTMLSpanElement | null>> }) {
+function CharacterAnimation({ heroRef, lettersRef }: { heroRef: React.RefObject<HTMLElement | null>; lettersRef: React.MutableRefObject<Record<string, HTMLSpanElement | null>> }) {
   const reduceMotion = useReducedMotion();
-  const [points, setPoints] = useState<{ x: number; end: number; y: number }[]>([]);
+  const [points, setPoints] = useState<{ x: number; y: number }[]>([]);
+  const [running, setRunning] = useState(false);
 
   useEffect(() => {
     if (!ENABLE_CHARACTER_ANIMATION || reduceMotion) return;
@@ -168,11 +169,11 @@ function CharacterAnimation({ heroRef, wordsRef }: { heroRef: React.RefObject<HT
       const hero = heroRef.current;
       if (!hero) return;
       const heroRect = hero.getBoundingClientRect();
-      const next = ["KOLA", "HARSHA"].map((word) => {
-        const rect = wordsRef.current[word]?.getBoundingClientRect();
+      const next = ["K", "A1", "H", "A2", "N"].map((letter) => {
+        const rect = lettersRef.current[letter]?.getBoundingClientRect();
         return rect
-          ? { x: rect.left - heroRect.left - 2, end: rect.right - heroRect.left - 22, y: rect.bottom - heroRect.top - 40 }
-          : { x: 0, end: 0, y: 0 };
+          ? { x: rect.left - heroRect.left - 2, y: rect.bottom - heroRect.top - 40 }
+          : { x: 0, y: 0 };
       });
       setPoints(next);
     };
@@ -185,47 +186,57 @@ function CharacterAnimation({ heroRef, wordsRef }: { heroRef: React.RefObject<HT
       observer.disconnect();
       window.removeEventListener("resize", measure);
     };
-  }, [heroRef, reduceMotion, wordsRef]);
+  }, [heroRef, reduceMotion, lettersRef]);
 
-  if (!ENABLE_CHARACTER_ANIMATION || reduceMotion || points.length !== 2) return null;
+  if (!ENABLE_CHARACTER_ANIMATION || reduceMotion || points.length !== 5) return null;
 
-  const [kola, harsha] = points;
-  const x = [kola.x, kola.end, harsha.x, harsha.end, "calc(100vw + 60px)"];
-  const y = [kola.y, kola.y, harsha.y, harsha.y, harsha.y];
+  const [k, a1, h, a2, n] = points;
+  const x = [k.x, a1.x, h.x, a2.x, n.x, "calc(100vw + 60px)"];
+  const y = [k.y, a1.y, h.y, a2.y, n.y, n.y];
 
   return (
-    <motion.div
-      aria-hidden="true"
-      className="pointer-events-none absolute left-0 top-0 z-20 h-[clamp(28px,3vw,42px)] w-[clamp(19px,2vw,28px)] text-ink"
-      initial={{ x: x[0], y: y[0], opacity: 0, scale: 0.92 }}
-      animate={{
-        x,
-        y,
-        opacity: [0, 1, 1, 1, 1, 1, 0],
-        scale: [0.92, 1, 1.12, 1, 1.1, 1, 1],
-        rotate: [0, 0, -12, 8, -10, 0, 0],
-      }}
-      transition={{
-        delay: 0.7,
-        duration: 6.9,
-        ease: ["easeOut", "linear", "easeOut", "linear", "easeOut", "linear"],
-        times: [0, 0.21, 0.3, 0.51, 0.6, 0.82, 1],
-      }}
-    >
-      <motion.div
-        className="h-full w-full"
-        animate={{ y: [0, -1.5, 0, -1.5, 0, -1, 0] }}
-        transition={{ delay: 0.7, duration: 6.9, times: [0, 0.2, 0.3, 0.5, 0.6, 0.82, 1], ease: "easeInOut" }}
-      >
-        <MiniCharacter />
-      </motion.div>
-    </motion.div>
+    <>
+      <button
+        type="button"
+        aria-label="Start the runner animation"
+        onClick={() => setRunning(true)}
+        style={{ left: k.x, top: k.y - 8 }}
+        className="absolute z-30 h-16 w-16 cursor-pointer bg-transparent"
+      />
+      {running && (
+        <motion.div
+          aria-hidden="true"
+          className="pointer-events-none absolute left-0 top-0 z-20 h-[clamp(28px,3vw,42px)] w-[clamp(19px,2vw,28px)] text-ink"
+          initial={{ x: k.x, y: k.y, opacity: 1 }}
+          animate={{
+            x,
+            y,
+            opacity: [1, 1, 1, 1, 1, 0],
+            scale: [1, 1.08, 1, 1.08, 1, 1],
+            rotate: [0, -8, 8, -8, 8, 0],
+          }}
+          transition={{
+            duration: 7,
+            ease: ["linear", "easeOut", "linear", "easeOut", "linear"],
+            times: [0, 0.22, 0.42, 0.6, 0.78, 1],
+          }}
+        >
+          <motion.div
+            className="h-full w-full"
+            animate={{ y: [0, -2, 0, -2, 0] }}
+            transition={{ duration: 0.28, repeat: Infinity, ease: "easeInOut" }}
+          >
+            <MiniCharacter />
+          </motion.div>
+        </motion.div>
+      )}
+    </>
   );
 }
 
 function Hero() {
   const ref = useRef<HTMLDivElement>(null);
-  const wordsRef = useRef<Record<string, HTMLSpanElement | null>>({});
+  const lettersRef = useRef<Record<string, HTMLSpanElement | null>>({});
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
   const y1 = useTransform(scrollYProgress, [0, 1], [0, -200]);
   const y2 = useTransform(scrollYProgress, [0, 1], [0, 120]);
@@ -244,17 +255,21 @@ function Hero() {
       </div>
 
       <motion.div style={{ y: y1, opacity: op }} className="relative z-10 px-6 pt-16 md:px-10 md:pt-24">
-        <CharacterAnimation heroRef={ref} wordsRef={wordsRef} />
+        <CharacterAnimation heroRef={ref} lettersRef={lettersRef} />
         <div className="flex items-baseline justify-between font-mono text-xs uppercase tracking-widest text-muted-foreground">
           <span>Issue №01 — Portfolio</span>
           <span>B.Tech ECE · CGPA 8.9</span>
         </div>
 
         <h1 className="mt-10 font-display font-medium hero-title">
-          <span ref={(node) => { wordsRef.current.KOLA = node; }} className="block">KOLA</span>
-          <span ref={(node) => { wordsRef.current.HARSHA = node; }} className="block text-stroke">HARSHA&mdash;</span>
-          <span ref={(node) => { wordsRef.current.VARDHAN = node; }} className="block">
-            VARDHAN<span className="text-accent">.</span>
+          <span className="block">
+            <span ref={(node) => { lettersRef.current.K = node; }} className="cursor-pointer">K</span>OL<span ref={(node) => { lettersRef.current.A1 = node; }}>A</span>
+          </span>
+          <span className="block text-stroke">
+            <span ref={(node) => { lettersRef.current.H = node; }}>H</span>ARSH<span ref={(node) => { lettersRef.current.A2 = node; }}>A</span>&mdash;
+          </span>
+          <span className="block">
+            VARDHA<span ref={(node) => { lettersRef.current.N = node; }}>N</span><span className="text-accent">.</span>
           </span>
         </h1>
       </motion.div>
