@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { motion, useScroll, useTransform, useMotionValue, useSpring, MotionStyle } from "framer-motion";
+import { AnimatePresence, motion, useScroll, useTransform, useMotionValue, useSpring, MotionStyle } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { ArrowUpRight, Github, Linkedin, Mail, Phone } from "lucide-react";
 
@@ -459,6 +459,8 @@ function Contact() {
 }
 
 export function Portfolio() {
+  const [showProjects, setShowProjects] = useState(false);
+
   return (
     <main className="relative">
       <ScrollProgress />
@@ -472,15 +474,36 @@ export function Portfolio() {
             <div className="flex items-center gap-4 font-mono text-xs uppercase tracking-widest text-muted-foreground">
               <span>§ 02</span><span className="h-px flex-1 bg-foreground/20" /><span>Selected Work · 2024—2026</span>
             </div>
-            <h2 className="mt-6 font-display text-6xl font-medium leading-[0.9] tracking-tight md:text-8xl">
-              <span className="font-serif italic text-accent">Projects</span>
-            </h2>
+            <button
+              type="button"
+              aria-expanded={showProjects}
+              onClick={() => setShowProjects((visible) => !visible)}
+              className="group mt-6 flex items-center gap-5 text-left"
+            >
+              <h2 className="font-display text-6xl font-medium leading-[0.9] tracking-tight md:text-8xl">
+                <span className="font-serif italic text-accent transition-colors group-hover:text-ink">Projects</span>
+              </h2>
+              <span className="mt-3 font-mono text-xs uppercase tracking-widest text-muted-foreground transition-transform group-hover:translate-y-1">
+                {showProjects ? "Hide ↑" : "Open ↓"}
+              </span>
+            </button>
           </div>
           <div className="md:col-span-4 md:col-start-9">
             <ProfileCard />
           </div>
         </div>
-        {projects.map((p, i) => <ProjectCard key={p.no} p={p} i={i} />)}
+        <AnimatePresence initial={false}>
+          {showProjects && (
+            <motion.div
+              initial={{ opacity: 0, y: -80 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -80 }}
+              transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+            >
+              {projects.map((p, i) => <ProjectCard key={p.no} p={p} i={i} />)}
+            </motion.div>
+          )}
+        </AnimatePresence>
       </section>
       <Marquee reverse items={["Adaptive Learning", "Conversational AI", "Medical AI Support", "Predictive Tracking", "LLM Feedback", "Accessible Dashboards"]} />
       <Skills />
