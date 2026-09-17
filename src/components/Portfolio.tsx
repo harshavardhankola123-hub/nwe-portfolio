@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { AnimatePresence, motion, useScroll, useTransform, useMotionValue, useSpring, MotionStyle } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
+import { useReducedMotion } from "framer-motion";
 import { ArrowUpRight, Github, Linkedin, Mail, Phone } from "lucide-react";
 
 const projects = [
@@ -140,8 +141,87 @@ function Magnetic({ children, className = "" }: { children: React.ReactNode; cla
   );
 }
 
+const ENABLE_CHARACTER_ANIMATION = true;
+
+function MiniCharacter() {
+  return (
+    <svg viewBox="0 0 32 48" aria-hidden="true" className="h-full w-full overflow-visible">
+      <circle cx="16" cy="7" r="5.5" fill="currentColor" />
+      <path d="M16 13v15M9.5 19.5 16 17l6.5 2.5M16 28l-5 13M16 28l6 13" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.4" />
+      <path d="M4 19h3M2 22h4" stroke="currentColor" strokeLinecap="round" strokeWidth="1.2" />
+    </svg>
+  );
+}
+
+function CharacterAnimation({ heroRef, wordsRef }: { heroRef: React.RefObject<HTMLElement | null>; wordsRef: React.MutableRefObject<Record<string, HTMLSpanElement | null>> }) {
+  const reduceMotion = useReducedMotion();
+  const [points, setPoints] = useState<{ x: number; end: number; y: number }[]>([]);
+
+  useEffect(() => {
+    if (!ENABLE_CHARACTER_ANIMATION || reduceMotion) return;
+
+    const measure = () => {
+      const hero = heroRef.current;
+      if (!hero) return;
+      const heroRect = hero.getBoundingClientRect();
+      const next = ["KOLA", "HARSHA", "VARDHAN"].map((word) => {
+        const rect = wordsRef.current[word]?.getBoundingClientRect();
+        return rect
+          ? { x: rect.left - heroRect.left - 2, end: rect.right - heroRect.left - 22, y: rect.bottom - heroRect.top - 40 }
+          : { x: 0, end: 0, y: 0 };
+      });
+      setPoints(next);
+    };
+
+    measure();
+    const observer = new ResizeObserver(measure);
+    if (heroRef.current) observer.observe(heroRef.current);
+    window.addEventListener("resize", measure);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", measure);
+    };
+  }, [heroRef, reduceMotion, wordsRef]);
+
+  if (!ENABLE_CHARACTER_ANIMATION || reduceMotion || points.length !== 3) return null;
+
+  const [kola, harsha, vardhan] = points;
+  const x = [kola.x, kola.end, harsha.x, harsha.end, vardhan.x, vardhan.end, "calc(100vw + 60px)"];
+  const y = [kola.y, kola.y, harsha.y, harsha.y, vardhan.y, vardhan.y, vardhan.y];
+
+  return (
+    <motion.div
+      aria-hidden="true"
+      className="pointer-events-none absolute left-0 top-0 z-20 h-[clamp(28px,3vw,42px)] w-[clamp(19px,2vw,28px)] text-ink"
+      initial={{ x: x[0], y: y[0], opacity: 0, scale: 0.92 }}
+      animate={{
+        x,
+        y,
+        opacity: [0, 1, 1, 1, 1, 1, 0],
+        scale: [0.92, 1, 1.12, 1, 1.1, 1, 1],
+        rotate: [0, 0, -12, 8, -10, 0, 0],
+      }}
+      transition={{
+        delay: 0.7,
+        duration: 6.9,
+        ease: ["easeOut", "linear", "easeOut", "linear", "easeOut", "linear"],
+        times: [0, 0.21, 0.3, 0.51, 0.6, 0.82, 1],
+      }}
+    >
+      <motion.div
+        className="h-full w-full"
+        animate={{ y: [0, -1.5, 0, -1.5, 0, -1, 0] }}
+        transition={{ delay: 0.7, duration: 6.9, times: [0, 0.2, 0.3, 0.5, 0.6, 0.82, 1], ease: "easeInOut" }}
+      >
+        <MiniCharacter />
+      </motion.div>
+    </motion.div>
+  );
+}
+
 function Hero() {
   const ref = useRef<HTMLDivElement>(null);
+  const wordsRef = useRef<Record<string, HTMLSpanElement | null>>({});
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
   const y1 = useTransform(scrollYProgress, [0, 1], [0, -200]);
   const y2 = useTransform(scrollYProgress, [0, 1], [0, 120]);
@@ -160,15 +240,16 @@ function Hero() {
       </div>
 
       <motion.div style={{ y: y1, opacity: op }} className="relative z-10 px-6 pt-16 md:px-10 md:pt-24">
+        <CharacterAnimation heroRef={ref} wordsRef={wordsRef} />
         <div className="flex items-baseline justify-between font-mono text-xs uppercase tracking-widest text-muted-foreground">
           <span>Issue №01 — Portfolio</span>
           <span>B.Tech ECE · CGPA 8.9</span>
         </div>
 
         <h1 className="mt-10 font-display font-medium hero-title">
-          <span className="block">KOLA</span>
-          <span className="block text-stroke">HARSHA&mdash;</span>
-          <span className="block">
+          <span ref={(node) => { wordsRef.current.KOLA = node; }} className="block">KOLA</span>
+          <span ref={(node) => { wordsRef.current.HARSHA = node; }} className="block text-stroke">HARSHA&mdash;</span>
+          <span ref={(node) => { wordsRef.current.VARDHAN = node; }} className="block">
             VARDHAN<span className="text-accent">.</span>
           </span>
         </h1>
