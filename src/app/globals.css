@@ -86,7 +86,7 @@
   from { transform: translateX(0); }
   to { transform: translateX(-50%); }
 }
-.marquee { animation: marquee 40s linear infinite; }
+  .marquee { animation: marquee 20s linear infinite; will-change: transform; }
 
 /* Flicker */
 @keyframes flicker {
