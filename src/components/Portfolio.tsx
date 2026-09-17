@@ -309,7 +309,7 @@ function ProfileCard() {
           <span>Hover / Focus</span>
         </div>
         <div>
-          <p className="font-mono text-xs uppercase tracking-widest text-accent">Kola Harshavardhan</p>
+          <p className="absolute left-5 top-16 z-20 max-w-[calc(100%-2.5rem)] border-l-2 border-accent bg-ink/75 px-3 py-2 font-mono text-sm font-semibold uppercase tracking-[0.18em] text-paper shadow-lg backdrop-blur-sm md:text-base">Kola Harshavardhan</p>
         </div>
       </div>
       <div className="absolute inset-0 translate-y-full opacity-0 transition-all duration-700 ease-out group-hover:translate-y-0 group-hover:opacity-100 group-focus:translate-y-0 group-focus:opacity-100">
