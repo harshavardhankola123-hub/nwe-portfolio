@@ -530,7 +530,7 @@ export function Portfolio() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -80 }}
               transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-              className="mt-12 grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3"
+              className="mt-12 grid grid-cols-1 gap-6 md:grid-cols-3"
             >
               {[
                 { title: "AI Learning Lab", issuer: "Google Developer Experts · July 2026", image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Screenshot%202026-09-17%20115553-PIundp0fwFSp0JfQz08b99D0pwuv9l.png", href: "/certificates/google-ai-learning-lab.pdf" },
