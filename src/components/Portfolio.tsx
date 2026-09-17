@@ -48,6 +48,62 @@ function ScrollProgress() {
   );
 }
 
+function InteractionSound() {
+  const audioContext = useRef<AudioContext | null>(null);
+  const lastScroll = useRef(0);
+  const [enabled, setEnabled] = useState(true);
+
+  const playTone = (frequency: number, duration = 0.045) => {
+    if (!enabled || typeof window === "undefined") return;
+    const AudioContextClass = window.AudioContext || (window as typeof window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+    if (!AudioContextClass) return;
+    const context = audioContext.current ?? new AudioContextClass();
+    audioContext.current = context;
+    if (context.state === "suspended") void context.resume();
+    const oscillator = context.createOscillator();
+    const gain = context.createGain();
+    oscillator.type = "sine";
+    oscillator.frequency.setValueAtTime(frequency, context.currentTime);
+    gain.gain.setValueAtTime(0.025, context.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, context.currentTime + duration);
+    oscillator.connect(gain).connect(context.destination);
+    oscillator.start();
+    oscillator.stop(context.currentTime + duration);
+  };
+
+  useEffect(() => {
+    const onClick = (event: MouseEvent) => {
+      if ((event.target as HTMLElement).closest("a, button, article, [data-magnet]")) playTone(520);
+    };
+    const onScroll = () => {
+      const now = performance.now();
+      if (now - lastScroll.current > 140) {
+        lastScroll.current = now;
+        playTone(220, 0.025);
+      }
+    };
+    window.addEventListener("click", onClick);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("click", onClick);
+      window.removeEventListener("scroll", onScroll);
+      audioContext.current?.close();
+    };
+  }, [enabled]);
+
+  return (
+    <button
+      type="button"
+      aria-pressed={enabled}
+      aria-label={`${enabled ? "Mute" : "Enable"} interaction sounds`}
+      onClick={() => setEnabled((value) => !value)}
+      className="fixed bottom-5 left-5 z-[210] border border-foreground/20 bg-paper/90 px-3 py-2 font-mono text-[10px] uppercase tracking-widest backdrop-blur transition-colors hover:bg-accent hover:text-accent-foreground"
+    >
+      Sound {enabled ? "On" : "Off"}
+    </button>
+  );
+}
+
 function Reveal({ children, className = "" }: { children: React.ReactNode; className?: string }) {
   return (
     <motion.div
@@ -180,7 +236,7 @@ function Hero() {
       >
         <div className="md:col-span-5 md:col-start-1">
           <p className="font-serif text-3xl italic leading-tight md:text-5xl">
-            Design engineer building <span className="text-accent">adaptive systems</span>, generative interfaces, and kinetic editorial work.
+            React developer and AI builder crafting <span className="text-accent">intelligent interfaces</span> with Python, JavaScript, Java, automation, and thoughtful visual systems.
           </p>
         </div>
         <div className="md:col-span-4 md:col-start-9">
@@ -394,9 +450,8 @@ function About() {
 
         <div className="col-span-12 md:col-span-7 md:col-start-6">
           <p className="font-serif text-4xl italic leading-[1.05] md:text-6xl">
-            I work at the seam between{" "}
-            <span className="text-accent">software</span>, learning, and visual systems —
-            building interfaces that adapt, explain, and occasionally surprise the person using them.
+            I build at the seam between{" "}
+            <span className="text-accent">code</span>, AI, and visual systems — using React, Python, JavaScript, Java, and automation tools to make products that feel clear, useful, and alive.
           </p>
           <div className="mt-12 grid grid-cols-2 gap-6 border-t border-foreground/15 pt-6 font-mono text-xs uppercase tracking-widest md:grid-cols-4">
             {[
@@ -467,6 +522,7 @@ export function Portfolio() {
   return (
     <main className="relative">
       <ScrollProgress />
+      <InteractionSound />
       <Cursor />
       <Hero />
       <Marquee items={["Adaptive Systems", "Generative AI", "Kinetic Editorial", "React Interfaces", "Motion Studies", "Visual Systems"]} />
