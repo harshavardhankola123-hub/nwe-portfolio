@@ -87,7 +87,11 @@ function InteractionSound() {
     return () => {
       window.removeEventListener("click", onClick);
       window.removeEventListener("scroll", onScroll);
-      audioContext.current?.close();
+      const context = audioContext.current;
+      audioContext.current = null;
+      if (context && context.state !== "closed") {
+        void context.close().catch(() => undefined);
+      }
     };
   }, [enabled]);
 
