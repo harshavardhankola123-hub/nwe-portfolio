@@ -48,66 +48,6 @@ function ScrollProgress() {
   );
 }
 
-function InteractionSound() {
-  const audioContext = useRef<AudioContext | null>(null);
-  const lastScroll = useRef(0);
-  const [enabled, setEnabled] = useState(true);
-
-  const playTone = (frequency: number, duration = 0.045) => {
-    if (!enabled || typeof window === "undefined") return;
-    const AudioContextClass = window.AudioContext || (window as typeof window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
-    if (!AudioContextClass) return;
-    const context = audioContext.current ?? new AudioContextClass();
-    audioContext.current = context;
-    if (context.state === "suspended") void context.resume();
-    const oscillator = context.createOscillator();
-    const gain = context.createGain();
-    oscillator.type = "sine";
-    oscillator.frequency.setValueAtTime(frequency, context.currentTime);
-    gain.gain.setValueAtTime(0.025, context.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.001, context.currentTime + duration);
-    oscillator.connect(gain).connect(context.destination);
-    oscillator.start();
-    oscillator.stop(context.currentTime + duration);
-  };
-
-  useEffect(() => {
-    const onClick = (event: MouseEvent) => {
-      if ((event.target as HTMLElement).closest("a, button, article, [data-magnet]")) playTone(520);
-    };
-    const onScroll = () => {
-      const now = performance.now();
-      if (now - lastScroll.current > 140) {
-        lastScroll.current = now;
-        playTone(220, 0.025);
-      }
-    };
-    window.addEventListener("click", onClick);
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => {
-      window.removeEventListener("click", onClick);
-      window.removeEventListener("scroll", onScroll);
-      const context = audioContext.current;
-      audioContext.current = null;
-      if (context && context.state !== "closed") {
-        void context.close().catch(() => undefined);
-      }
-    };
-  }, [enabled]);
-
-  return (
-    <button
-      type="button"
-      aria-pressed={enabled}
-      aria-label={`${enabled ? "Mute" : "Enable"} interaction sounds`}
-      onClick={() => setEnabled((value) => !value)}
-      className="fixed bottom-5 left-5 z-[210] border border-foreground/20 bg-paper/90 px-3 py-2 font-mono text-[10px] uppercase tracking-widest backdrop-blur transition-colors hover:bg-accent hover:text-accent-foreground"
-    >
-      Sound {enabled ? "On" : "Off"}
-    </button>
-  );
-}
-
 function Reveal({ children, className = "" }: { children: React.ReactNode; className?: string }) {
   return (
     <motion.div
@@ -526,7 +466,6 @@ export function Portfolio() {
   return (
     <main className="relative">
       <ScrollProgress />
-      <InteractionSound />
       <Cursor />
       <Hero />
       <Marquee items={["Adaptive Systems", "Generative AI", "Kinetic Editorial", "React Interfaces", "Motion Studies", "Visual Systems"]} />
