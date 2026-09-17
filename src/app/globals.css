@@ -93,9 +93,39 @@
   0%, 100% { opacity: 1; }
   50% { opacity: 0.7; }
 }
-.flicker { animation: flicker 3s ease-in-out infinite; }
+  .flicker { animation: flicker 3s ease-in-out infinite; }
 
-/* Projection light */
+  @keyframes runner-arms-front {
+    0%, 100% { transform: rotate(28deg); transform-origin: 16px 18px; }
+    50% { transform: rotate(-42deg); transform-origin: 16px 18px; }
+  }
+
+  @keyframes runner-arms-back {
+    0%, 100% { transform: rotate(-32deg); transform-origin: 16px 18px; }
+    50% { transform: rotate(38deg); transform-origin: 16px 18px; }
+  }
+
+  @keyframes runner-legs-front {
+    0%, 100% { transform: rotate(34deg); transform-origin: 16px 28px; }
+    50% { transform: rotate(-48deg); transform-origin: 16px 28px; }
+  }
+
+  @keyframes runner-legs-back {
+    0%, 100% { transform: rotate(-38deg); transform-origin: 16px 28px; }
+    50% { transform: rotate(46deg); transform-origin: 16px 28px; }
+  }
+
+  .runner-arm, .runner-leg { animation-duration: 220ms; animation-iteration-count: infinite; animation-timing-function: ease-in-out; }
+  .runner-arm-front, .runner-leg-front { animation-name: runner-arms-front; }
+  .runner-arm-back, .runner-leg-back { animation-name: runner-arms-back; }
+  .runner-leg-front { animation-name: runner-legs-front; }
+  .runner-leg-back { animation-name: runner-legs-back; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .runner-arm, .runner-leg { animation: none; }
+  }
+  
+  /* Projection light */
 .projection {
   background: radial-gradient(ellipse 80% 60% at 50% 0%, oklch(0.85 0.18 95 / 0.25), transparent 60%);
 }

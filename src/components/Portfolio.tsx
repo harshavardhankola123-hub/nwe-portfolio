@@ -147,7 +147,11 @@ function MiniCharacter() {
   return (
     <svg viewBox="0 0 32 48" aria-hidden="true" className="h-full w-full overflow-visible">
       <circle cx="16" cy="7" r="5.5" fill="currentColor" />
-      <path d="M16 13v15M9.5 19.5 16 17l6.5 2.5M16 28l-5 13M16 28l6 13" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.4" />
+      <path d="M16 13v15" fill="none" stroke="currentColor" strokeLinecap="round" strokeWidth="2.4" />
+      <path className="runner-arm runner-arm-front" d="M16 17l8 5" fill="none" stroke="currentColor" strokeLinecap="round" strokeWidth="2.4" />
+      <path className="runner-arm runner-arm-back" d="M16 18l-7 5" fill="none" stroke="currentColor" strokeLinecap="round" strokeWidth="2.4" />
+      <path className="runner-leg runner-leg-front" d="M16 28l8 10" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.4" />
+      <path className="runner-leg runner-leg-back" d="M16 28l-8 10" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.4" />
       <path d="M4 19h3M2 22h4" stroke="currentColor" strokeLinecap="round" strokeWidth="1.2" />
     </svg>
   );
@@ -164,7 +168,7 @@ function CharacterAnimation({ heroRef, wordsRef }: { heroRef: React.RefObject<HT
       const hero = heroRef.current;
       if (!hero) return;
       const heroRect = hero.getBoundingClientRect();
-      const next = ["KOLA", "HARSHA", "VARDHAN"].map((word) => {
+      const next = ["KOLA", "HARSHA"].map((word) => {
         const rect = wordsRef.current[word]?.getBoundingClientRect();
         return rect
           ? { x: rect.left - heroRect.left - 2, end: rect.right - heroRect.left - 22, y: rect.bottom - heroRect.top - 40 }
@@ -183,11 +187,11 @@ function CharacterAnimation({ heroRef, wordsRef }: { heroRef: React.RefObject<HT
     };
   }, [heroRef, reduceMotion, wordsRef]);
 
-  if (!ENABLE_CHARACTER_ANIMATION || reduceMotion || points.length !== 3) return null;
+  if (!ENABLE_CHARACTER_ANIMATION || reduceMotion || points.length !== 2) return null;
 
-  const [kola, harsha, vardhan] = points;
-  const x = [kola.x, kola.end, harsha.x, harsha.end, vardhan.x, vardhan.end, "calc(100vw + 60px)"];
-  const y = [kola.y, kola.y, harsha.y, harsha.y, vardhan.y, vardhan.y, vardhan.y];
+  const [kola, harsha] = points;
+  const x = [kola.x, kola.end, harsha.x, harsha.end, "calc(100vw + 60px)"];
+  const y = [kola.y, kola.y, harsha.y, harsha.y, harsha.y];
 
   return (
     <motion.div
