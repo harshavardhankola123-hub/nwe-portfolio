@@ -533,7 +533,7 @@ export function Portfolio() {
               className="mt-12 grid grid-cols-1 gap-6 md:grid-cols-3"
             >
               {[
-                { title: "GenAI-Powered Data Analytics", issuer: "Tata / Forage · January 2026", image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Screenshot%202026-09-17%20114913-RFg6FSNTLQWaIEJ74TRSfMW4UsZFHa.png", href: "/certificates/tata-genai-data-analytics.pdf" },
+                { title: "GenAI-Powered Data Analytics", issuer: "Tata / Forage · January 2026", image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-zTajONPA6bj5VXKPI8xF04ATYExRbD.png", href: "/certificates/tata-genai-powered-data-analytics.pdf" },
                 { title: "AI and n8n Internship", issuer: "Kairokume Pvt. Ltd. · June–July 2026", image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Screenshot%202026-09-17%20114933-68to8XbSLWE4dLXPXgcg6bTKQiMpLw.png", href: "/certificates/ai-n8n-internship.pdf" },
                 { title: "AI Learning Lab", issuer: "Google Developer Experts · July 2026", image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Screenshot%202026-09-17%20114913-RFg6FSNTLQWaIEJ74TRSfMW4UsZFHa.png", href: "/certificates/google-ai-learning-lab.pdf" },
               ].map((certificate) => (
