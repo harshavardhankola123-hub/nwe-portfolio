@@ -159,4 +159,27 @@
   aspect-ratio: 3 / 4;
 }
 
+.ninja-rig { position: relative; width: 100%; height: 100%; filter: drop-shadow(3px 5px 0 oklch(0.08 0.005 90 / 0.16)); }
+.ninja-head { position: absolute; left: 34%; top: 5%; width: 30%; aspect-ratio: 1; border-radius: 50%; background: var(--color-ink); }
+.ninja-body { position: absolute; left: 28%; top: 27%; width: 43%; height: 42%; border-radius: 42% 48% 35% 36%; background: var(--color-ink); transform: skew(-8deg); }
+.ninja-body::before, .ninja-body::after { content: ""; position: absolute; top: 60%; width: 16%; height: 58%; border-radius: 999px; background: var(--color-ink); }
+.ninja-body::before { left: -18%; transform: rotate(48deg); }
+.ninja-body::after { right: -24%; transform: rotate(-50deg); }
+.ninja-eye-laser { position: absolute; left: 58%; top: 15%; width: 75%; height: 2px; background: var(--color-accent); box-shadow: 0 0 8px var(--color-accent); transform: rotate(-5deg); transform-origin: left; }
+.ninja-scarf { position: absolute; left: 28%; top: 31%; width: 105%; height: 28%; border-radius: 50% 12% 70% 20%; background: var(--color-ink); transform-origin: 12% 20%; }
+.ninja-scarf-back { opacity: .78; transform: rotate(20deg) translate(12%, 20%); animation: scarf-wave 500ms ease-in-out infinite alternate; }
+.ninja-scarf-front { transform: rotate(-12deg) translate(3%, -5%); animation: scarf-wave-front 620ms ease-in-out infinite alternate; }
+.ninja-katana { position: absolute; left: 57%; top: 37%; width: 72%; height: 5%; border-radius: 999px; background: linear-gradient(90deg, var(--color-ink) 0 16%, var(--color-accent) 16% 19%, #d6d3c9 19% 100%); transform: rotate(48deg); transform-origin: left; }
+.ninja-katana::after { content: ""; position: absolute; left: 12%; top: -150%; width: 5%; height: 400%; background: var(--color-accent); }
+.ninja-sparks { position: absolute; right: -22%; bottom: 8%; }
+.ninja-sparks i { position: absolute; display: block; width: 5px; height: 5px; border-radius: 50%; background: var(--color-accent); animation: spark-pop 700ms ease-out infinite; }
+.ninja-sparks i:nth-child(1) { transform: translate(-18px, 12px); animation-delay: 0ms; }
+.ninja-sparks i:nth-child(2) { transform: translate(4px, 2px); animation-delay: 120ms; }
+.ninja-sparks i:nth-child(3) { transform: translate(-3px, 26px); animation-delay: 240ms; }
+.ninja-sparks i:nth-child(4) { transform: translate(18px, 17px); animation-delay: 360ms; }
+@keyframes scarf-wave { to { transform: rotate(35deg) translate(18%, 5%) scaleX(1.08); } }
+@keyframes scarf-wave-front { to { transform: rotate(-28deg) translate(8%, -10%) scaleX(.92); } }
+@keyframes spark-pop { 0%, 100% { opacity: 0; scale: .3; } 35% { opacity: 1; scale: 1.5; } }
+@media (prefers-reduced-motion: reduce) { .ninja-scarf, .ninja-sparks i { animation: none; } }
+
 

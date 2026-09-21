@@ -143,93 +143,47 @@ function Magnetic({ children, className = "" }: { children: React.ReactNode; cla
 
 const ENABLE_CHARACTER_ANIMATION = true;
 
-function MiniCharacter() {
-  return (
-    <svg viewBox="0 0 32 48" aria-hidden="true" className="h-full w-full overflow-visible">
-      <circle cx="16" cy="7" r="5.5" fill="currentColor" />
-      <path d="M16 13v15" fill="none" stroke="currentColor" strokeLinecap="round" strokeWidth="2.4" />
-      <path className="runner-arm runner-arm-front" d="M16 17l8 5" fill="none" stroke="currentColor" strokeLinecap="round" strokeWidth="2.4" />
-      <path className="runner-arm runner-arm-back" d="M16 18l-7 5" fill="none" stroke="currentColor" strokeLinecap="round" strokeWidth="2.4" />
-      <path className="runner-leg runner-leg-front" d="M16 28l8 10" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.4" />
-      <path className="runner-leg runner-leg-back" d="M16 28l-8 10" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.4" />
-      <path d="M4 19h3M2 22h4" stroke="currentColor" strokeLinecap="round" strokeWidth="1.2" />
-    </svg>
-  );
-}
+type NinjaPoint = { x: number; y: number };
 
 function CharacterAnimation({ heroRef, lettersRef }: { heroRef: React.RefObject<HTMLElement | null>; lettersRef: React.MutableRefObject<Record<string, HTMLSpanElement | null>> }) {
   const reduceMotion = useReducedMotion();
-  const [points, setPoints] = useState<{ x: number; y: number }[]>([]);
+  const [points, setPoints] = useState<NinjaPoint[]>([]);
   const [running, setRunning] = useState(false);
 
   useEffect(() => {
     if (!ENABLE_CHARACTER_ANIMATION || reduceMotion) return;
-
     const measure = () => {
       const hero = heroRef.current;
       if (!hero) return;
       const heroRect = hero.getBoundingClientRect();
-      const next = ["K", "A1", "H", "A2", "N"].map((letter) => {
+      setPoints(["K", "A1", "H", "A2", "N"].map((letter) => {
         const rect = lettersRef.current[letter]?.getBoundingClientRect();
-        return rect
-          ? { x: rect.left - heroRect.left - 2, y: rect.bottom - heroRect.top - 40 }
-          : { x: 0, y: 0 };
-      });
-      setPoints(next);
+        return rect ? { x: rect.left - heroRect.left - 8, y: rect.bottom - heroRect.top - 42 } : { x: 0, y: 0 };
+      }));
     };
-
     measure();
     const observer = new ResizeObserver(measure);
     if (heroRef.current) observer.observe(heroRef.current);
     window.addEventListener("resize", measure);
-    return () => {
-      observer.disconnect();
-      window.removeEventListener("resize", measure);
-    };
+    return () => { observer.disconnect(); window.removeEventListener("resize", measure); };
   }, [heroRef, reduceMotion, lettersRef]);
 
   if (!ENABLE_CHARACTER_ANIMATION || reduceMotion || points.length !== 5) return null;
-
   const [k, a1, h, a2, n] = points;
-  const x = [k.x, a1.x, h.x, a2.x, n.x, "calc(100vw + 60px)"];
-  const y = [k.y, a1.y, h.y, a2.y, n.y, n.y];
+  const x = [k.x, a1.x, h.x, a2.x, n.x, "calc(100vw + 90px)"];
+  const y = [k.y, a1.y - 18, h.y - 86, a2.y - 32, n.y, n.y - 250];
+  const replay = () => setRunning(false);
 
   return (
     <>
-      <button
-        type="button"
-        aria-label="Start the runner animation"
-        onClick={() => setRunning(true)}
-        style={{ left: k.x, top: k.y - 8 }}
-        className="absolute z-30 h-16 w-16 cursor-pointer bg-transparent"
-      />
-      {running && (
-        <motion.div
-          aria-hidden="true"
-          className="pointer-events-none absolute left-0 top-0 z-20 h-[clamp(28px,3vw,42px)] w-[clamp(19px,2vw,28px)] text-ink"
-          initial={{ x: k.x, y: k.y, opacity: 1 }}
-          animate={{
-            x,
-            y,
-            opacity: [1, 1, 1, 1, 1, 0],
-            scale: [1, 1.08, 1, 1.08, 1, 1],
-            rotate: [0, -8, 8, -8, 8, 0],
-          }}
-          transition={{
-            duration: 7,
-            ease: ["linear", "easeOut", "linear", "easeOut", "linear"],
-            times: [0, 0.22, 0.42, 0.6, 0.78, 1],
-          }}
-        >
-          <motion.div
-            className="h-full w-full"
-            animate={{ y: [0, -2, 0, -2, 0] }}
-            transition={{ duration: 0.28, repeat: Infinity, ease: "easeInOut" }}
-          >
-            <MiniCharacter />
-          </motion.div>
-        </motion.div>
-      )}
+      <button type="button" aria-label="Start the ninja parkour animation" onClick={() => setRunning(true)} style={{ left: k.x - 18, top: k.y - 42 }} className="absolute z-30 h-28 w-28 cursor-pointer bg-transparent" />
+      <button type="button" aria-label="Trigger ninja parkour" onClick={() => setRunning(true)} className="absolute bottom-24 left-1/2 z-30 flex -translate-x-1/2 items-center gap-3 border border-foreground/20 bg-paper/90 px-4 py-2 font-mono text-[10px] uppercase tracking-[0.22em] backdrop-blur-sm transition-colors hover:bg-ink hover:text-paper">
+        <span className="size-2 rounded-full bg-accent shadow-[0_0_14px_var(--color-accent)]" /> Ninja parkour <span className="text-muted-foreground">click to launch</span>
+      </button>
+      {running && <motion.div aria-hidden="true" className="pointer-events-none absolute left-0 top-0 z-20 h-[clamp(54px,6vw,84px)] w-[clamp(48px,5vw,72px)] text-ink" initial={{ x: k.x, y: k.y - 42 }} animate={{ x, y, opacity: [1, 1, 1, 1, 1, 0], rotate: [0, 18, -25, 28, -8, 0], scale: [1, 1.18, 1.28, 1.05, 1.2, 1] }} transition={{ duration: 6.8, ease: ["easeIn", "easeOut", "easeInOut", "easeOut", "easeIn", "easeIn"], times: [0, 0.2, 0.43, 0.62, 0.82, 1] }} onAnimationComplete={replay}>
+        <div className="ninja-rig"><span className="ninja-head" /><span className="ninja-body" /><span className="ninja-eye-laser" /><span className="ninja-scarf ninja-scarf-back" /><span className="ninja-scarf ninja-scarf-front" /><span className="ninja-katana" /></div>
+        <div className="ninja-sparks"><i /><i /><i /><i /></div>
+      </motion.div>}
     </>
   );
 }
