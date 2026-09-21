@@ -159,27 +159,4 @@
   aspect-ratio: 3 / 4;
 }
 
-@keyframes shadow-drift {
-  0%, 100% { transform: translate3d(-2%, 0, 0) rotate(-1deg); }
-  50% { transform: translate3d(2%, -1.5%, 0) rotate(1deg); }
-}
-
-@keyframes shadow-breathe {
-  0%, 100% { transform: scaleX(0.88); opacity: 0.22; }
-  50% { transform: scaleX(1.05); opacity: 0.34; }
-}
-
-.shadow-figure {
-  animation: shadow-drift 9s ease-in-out infinite;
-  filter: drop-shadow(18px 18px 0 oklch(0.08 0.005 90 / 0.12));
-}
-
-.shadow-aura {
-  animation: shadow-breathe 4s ease-in-out infinite;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .shadow-figure, .shadow-aura { animation: none; }
-}
-
 
