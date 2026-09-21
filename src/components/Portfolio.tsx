@@ -177,6 +177,9 @@ function CharacterAnimation({ heroRef, lettersRef }: { heroRef: React.RefObject<
   return (
     <>
       <button type="button" aria-label="Start the ninja parkour animation" onClick={() => setRunning(true)} style={{ left: k.x - 18, top: k.y - 42 }} className="absolute z-30 h-28 w-28 cursor-pointer bg-transparent" />
+      {!running && <div aria-hidden="true" className="pointer-events-none absolute left-0 top-0 z-20 h-[clamp(54px,6vw,84px)] w-[clamp(48px,5vw,72px)] text-ink" style={{ transform: `translate(${k.x}px, ${k.y - 42}px)` }}>
+        <div className="ninja-rig"><span className="ninja-head" /><span className="ninja-body" /><span className="ninja-eye-laser" /><span className="ninja-scarf ninja-scarf-back" /><span className="ninja-scarf ninja-scarf-front" /><span className="ninja-katana" /></div>
+      </div>}
       <button type="button" aria-label="Trigger ninja parkour" onClick={() => setRunning(true)} className="absolute bottom-24 left-1/2 z-30 flex -translate-x-1/2 items-center gap-3 border border-foreground/20 bg-paper/90 px-4 py-2 font-mono text-[10px] uppercase tracking-[0.22em] backdrop-blur-sm transition-colors hover:bg-ink hover:text-paper">
         <span className="size-2 rounded-full bg-accent shadow-[0_0_14px_var(--color-accent)]" /> Ninja parkour <span className="text-muted-foreground">click to launch</span>
       </button>
@@ -207,8 +210,8 @@ function Hero() {
         <span className="flicker text-accent">● rec</span>
       </div>
 
+      <CharacterAnimation heroRef={ref} lettersRef={lettersRef} />
       <motion.div style={{ y: y1, opacity: op }} className="relative z-10 px-6 pt-16 md:px-10 md:pt-24">
-        <CharacterAnimation heroRef={ref} lettersRef={lettersRef} />
         <div className="flex items-baseline justify-between font-mono text-xs uppercase tracking-widest text-muted-foreground">
           <span>Issue №01 — Portfolio</span>
           <span>B.Tech ECE · CGPA 8.9</span>
