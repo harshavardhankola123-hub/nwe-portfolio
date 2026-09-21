@@ -27,7 +27,7 @@ export const viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "Kola Harshavardhan — Design Engineer / Motion Systems",
+  title: "Kola Harshavardhan — Editorial Portfolio",
   description: "Portfolio of Kola Harshavardhan — design engineer building adaptive learning systems, generative AI interfaces, and kinetic editorial experiences.",
   authors: [{ name: "Kola Harshavardhan" }],
   openGraph: {
