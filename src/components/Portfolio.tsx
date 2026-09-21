@@ -143,6 +143,36 @@ function Magnetic({ children, className = "" }: { children: React.ReactNode; cla
 
 const ENABLE_CHARACTER_ANIMATION = true;
 
+const SHADOW_VIDEO_URL = "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/anime%20portfolio%20animation-FYwCj40TUUJxN67nmwJkEjD6eHZaaM.mp4";
+const SHADOW_IMAGE_URL = "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-OEIiWbFFbMqnEPYBD2t43RHcMlSXc8.png";
+
+function ShadowMotion() {
+  return (
+    <div className="pointer-events-none absolute inset-x-0 bottom-0 z-[1] h-[42vh] min-h-[280px] overflow-hidden md:h-[52vh]" aria-hidden="true">
+      <video
+        className="absolute inset-0 h-full w-full object-cover object-center opacity-25 mix-blend-multiply grayscale"
+        src={SHADOW_VIDEO_URL}
+        autoPlay
+        muted
+        loop
+        playsInline
+        preload="metadata"
+      />
+      <div className="shadow-stage absolute inset-0 flex items-end justify-center">
+        <div className="shadow-figure relative h-[95%] w-[min(82vw,540px)]">
+          <img
+            src={SHADOW_IMAGE_URL}
+            alt=""
+            className="h-full w-full object-contain object-bottom mix-blend-multiply"
+          />
+          <div className="shadow-aura absolute inset-x-[16%] bottom-[2%] h-10 rounded-[50%] bg-ink/30 blur-2xl" />
+        </div>
+      </div>
+      <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-paper via-paper/35 to-transparent" />
+    </div>
+  );
+}
+
 function MiniCharacter() {
   return (
     <svg viewBox="0 0 32 48" aria-hidden="true" className="h-full w-full overflow-visible">
@@ -246,6 +276,7 @@ function Hero() {
     <section ref={ref} className="relative min-h-screen overflow-hidden bg-paper text-ink">
       <div className="absolute inset-0 bg-grid" />
       <div className="absolute inset-0 projection" />
+      <ShadowMotion />
 
       {/* top bar */}
       <div className="relative z-10 flex items-center justify-between border-b border-foreground/15 px-6 py-4 font-mono text-xs uppercase tracking-widest md:px-10">
