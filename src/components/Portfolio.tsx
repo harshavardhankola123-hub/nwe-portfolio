@@ -174,7 +174,7 @@ function CharacterAnimation({ heroRef, lettersRef }: { heroRef: React.RefObject<
       const next = ["K", "A1", "H", "A2", "N"].map((letter) => {
         const rect = lettersRef.current[letter]?.getBoundingClientRect();
         return rect
-          ? { x: rect.left - heroRect.left - 2, y: rect.bottom - heroRect.top - 40 }
+          ? { x: rect.left - heroRect.left - 2, y: rect.top - heroRect.top - 42 }
           : { x: 0, y: 0 };
       });
       setPoints(next);
@@ -195,8 +195,8 @@ function CharacterAnimation({ heroRef, lettersRef }: { heroRef: React.RefObject<
   if (!ENABLE_CHARACTER_ANIMATION || reduceMotion || points.length !== 5) return null;
 
   const [k, a1, h, a2, n] = points;
-  const x = [k.x, a1.x, h.x, a2.x, n.x, "calc(100vw + 60px)"];
-  const y = [k.y, a1.y, h.y, a2.y, n.y, n.y];
+  const x = [k.x, k.x + 4, k.x - 2, k.x + 3, k.x];
+  const y = [k.y, k.y - 2, k.y, k.y - 2, k.y];
 
   return (
     <>
@@ -207,7 +207,7 @@ function CharacterAnimation({ heroRef, lettersRef }: { heroRef: React.RefObject<
           setRunKey((key) => key + 1);
           setRunning(true);
         }}
-        style={{ left: k.x, top: k.y - 8 }}
+        style={{ left: k.x - 4, top: k.y - 4 }}
         className="absolute z-30 h-16 w-16 cursor-pointer bg-transparent"
       />
       {running && (
@@ -219,14 +219,15 @@ function CharacterAnimation({ heroRef, lettersRef }: { heroRef: React.RefObject<
           animate={{
             x,
             y,
-            opacity: [1, 1, 1, 1, 1, 0],
-            scale: [1, 1.08, 1, 1.08, 1, 1],
-            rotate: [0, -8, 8, -8, 8, 0],
+            opacity: [1, 1, 1, 1, 1],
+            scale: [1, 1.04, 1, 1.04, 1],
+            rotate: [0, -5, 4, -5, 0],
           }}
           transition={{
-            duration: 7,
-            ease: ["linear", "easeOut", "linear", "easeOut", "linear"],
-            times: [0, 0.22, 0.42, 0.6, 0.78, 1],
+            duration: 2.8,
+            ease: "easeInOut",
+            times: [0, 0.24, 0.5, 0.76, 1],
+            repeat: Infinity,
           }}
         >
           <motion.div
