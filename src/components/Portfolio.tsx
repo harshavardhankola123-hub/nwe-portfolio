@@ -158,7 +158,7 @@ function CharacterAnimation({ heroRef, lettersRef }: { heroRef: React.RefObject<
       const heroRect = hero.getBoundingClientRect();
       setPoints(["K", "A1", "H", "A2", "N"].map((letter) => {
         const rect = lettersRef.current[letter]?.getBoundingClientRect();
-        return rect ? { x: rect.left - heroRect.left - 8, y: rect.bottom - heroRect.top - 42 } : { x: 0, y: 0 };
+        return rect ? { x: rect.left - heroRect.left - 4, y: rect.top - heroRect.top - 54 } : { x: 0, y: 0 };
       }));
     };
     measure();
@@ -168,15 +168,21 @@ function CharacterAnimation({ heroRef, lettersRef }: { heroRef: React.RefObject<
     return () => { observer.disconnect(); window.removeEventListener("resize", measure); };
   }, [heroRef, reduceMotion, lettersRef]);
 
+  useEffect(() => {
+    if (reduceMotion || points.length !== 5) return;
+    const timer = window.setTimeout(() => setRunning(true), 900);
+    return () => window.clearTimeout(timer);
+  }, [points.length, reduceMotion]);
+
   if (!ENABLE_CHARACTER_ANIMATION || reduceMotion || points.length !== 5) return null;
   const [k, a1, h, a2, n] = points;
-  const x = [k.x, a1.x, h.x, a2.x, n.x, "calc(100vw + 90px)"];
-  const y = [k.y, a1.y - 18, h.y - 86, a2.y - 32, n.y, n.y - 250];
-  const replay = () => setRunning(false);
+  const x = [k.x, a1.x + 20, h.x + 24, a2.x + 18, n.x + 24, "calc(100vw + 90px)"];
+  const y = [k.y, a1.y - 28, h.y - 84, a2.y - 50, n.y - 10, n.y - 250];
+  const replay = () => window.setTimeout(() => setRunning(true), 800);
 
   return (
     <>
-      <button type="button" aria-label="Start the ninja parkour animation" onClick={() => setRunning(true)} style={{ left: k.x - 18, top: k.y - 42 }} className="absolute z-30 h-28 w-28 cursor-pointer bg-transparent" />
+      <button type="button" aria-label="Start the ninja parkour animation" onClick={() => setRunning(true)} style={{ left: k.x - 18, top: k.y - 18 }} className="absolute z-30 h-28 w-28 cursor-pointer bg-transparent" />
       {!running && <div aria-hidden="true" className="pointer-events-none absolute left-0 top-0 z-20 h-[clamp(54px,6vw,84px)] w-[clamp(48px,5vw,72px)] text-ink" style={{ transform: `translate(${k.x}px, ${k.y - 42}px)` }}>
         <div className="ninja-rig"><span className="ninja-head" /><span className="ninja-body" /><span className="ninja-eye-laser" /><span className="ninja-scarf ninja-scarf-back" /><span className="ninja-scarf ninja-scarf-front" /><span className="ninja-katana" /></div>
       </div>}
