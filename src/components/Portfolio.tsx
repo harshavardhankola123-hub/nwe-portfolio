@@ -147,6 +147,7 @@ function MiniCharacter() {
   return (
     <svg viewBox="0 0 32 48" aria-hidden="true" className="h-full w-full overflow-visible">
       <circle cx="16" cy="7" r="5.5" fill="currentColor" />
+      <path d="M12 11h10l6 3-7 2-5-3Z" fill="var(--color-accent)" />
       <path d="M16 13v15" fill="none" stroke="currentColor" strokeLinecap="round" strokeWidth="2.4" />
       <path className="runner-arm runner-arm-front" d="M16 17l8 5" fill="none" stroke="currentColor" strokeLinecap="round" strokeWidth="2.4" />
       <path className="runner-arm runner-arm-back" d="M16 18l-7 5" fill="none" stroke="currentColor" strokeLinecap="round" strokeWidth="2.4" />
@@ -161,6 +162,7 @@ function CharacterAnimation({ heroRef, lettersRef }: { heroRef: React.RefObject<
   const reduceMotion = useReducedMotion();
   const [points, setPoints] = useState<{ x: number; y: number }[]>([]);
   const [running, setRunning] = useState(false);
+  const [runKey, setRunKey] = useState(0);
 
   useEffect(() => {
     if (!ENABLE_CHARACTER_ANIMATION || reduceMotion) return;
@@ -182,9 +184,11 @@ function CharacterAnimation({ heroRef, lettersRef }: { heroRef: React.RefObject<
     const observer = new ResizeObserver(measure);
     if (heroRef.current) observer.observe(heroRef.current);
     window.addEventListener("resize", measure);
+    const introTimer = window.setTimeout(() => setRunning(true), 650);
     return () => {
       observer.disconnect();
       window.removeEventListener("resize", measure);
+      window.clearTimeout(introTimer);
     };
   }, [heroRef, reduceMotion, lettersRef]);
 
@@ -199,12 +203,16 @@ function CharacterAnimation({ heroRef, lettersRef }: { heroRef: React.RefObject<
       <button
         type="button"
         aria-label="Start the runner animation"
-        onClick={() => setRunning(true)}
+        onClick={() => {
+          setRunKey((key) => key + 1);
+          setRunning(true);
+        }}
         style={{ left: k.x, top: k.y - 8 }}
         className="absolute z-30 h-16 w-16 cursor-pointer bg-transparent"
       />
       {running && (
         <motion.div
+          key={runKey}
           aria-hidden="true"
           className="pointer-events-none absolute left-0 top-0 z-20 h-[clamp(28px,3vw,42px)] w-[clamp(19px,2vw,28px)] text-ink"
           initial={{ x: k.x, y: k.y, opacity: 1 }}
