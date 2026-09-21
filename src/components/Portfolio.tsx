@@ -246,19 +246,6 @@ function Hero() {
     <section ref={ref} className="relative min-h-screen overflow-hidden bg-paper text-ink">
       <div className="absolute inset-0 bg-grid" />
       <div className="absolute inset-0 projection" />
-      <div className="pointer-events-none absolute inset-0 z-[1] overflow-hidden" aria-hidden="true">
-        <video
-          className="absolute inset-0 h-full w-full object-cover object-center opacity-35 mix-blend-multiply grayscale"
-          src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/anime%20portfolio%20animation-1K7sbTTOcdViwd6ZE0Wkm0WZ3PZ2pb.mp4"
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="auto"
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-paper/10 via-transparent to-paper/65" />
-      </div>
-
       {/* top bar */}
       <div className="relative z-10 flex items-center justify-between border-b border-foreground/15 px-6 py-4 font-mono text-xs uppercase tracking-widest md:px-10">
         <span>K · H — Studio / 2026</span>
