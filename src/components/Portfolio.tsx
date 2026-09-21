@@ -160,7 +160,7 @@ function MiniCharacter() {
 function CharacterAnimation({ heroRef, lettersRef }: { heroRef: React.RefObject<HTMLElement | null>; lettersRef: React.MutableRefObject<Record<string, HTMLSpanElement | null>> }) {
   const reduceMotion = useReducedMotion();
   const [points, setPoints] = useState<{ x: number; y: number }[]>([]);
-  const [running, setRunning] = useState(false);
+  const [running, setRunning] = useState(true);
 
   useEffect(() => {
     if (!ENABLE_CHARACTER_ANIMATION || reduceMotion) return;
@@ -248,20 +248,19 @@ function Hero() {
       <div className="absolute inset-0 projection" />
 
       {/* top bar */}
-      <div className="relative z-10 flex items-center justify-between border-b border-foreground/15 px-6 py-4 font-mono text-xs uppercase tracking-widest md:px-10">
-        <span>K · H — Studio / 2026</span>
-        <span className="hidden md:inline">Tirupati ⇄ Earth · 13.6288°N</span>
-        <span className="flicker text-accent">● rec</span>
+      <div className="relative z-10 flex items-center justify-between border-b border-foreground/15 px-6 py-4 font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground md:px-10">
+        <span>[001] Editorial Hero Archive</span>
+        <span className="hidden md:inline">System Status: Interactive Rig Armed</span>
       </div>
 
-      <motion.div style={{ y: y1, opacity: op }} className="relative z-10 px-6 pt-16 md:px-10 md:pt-24">
+      <motion.div style={{ y: y1, opacity: op }} className="relative z-10 px-6 pt-10 md:px-10 md:pt-16">
         <CharacterAnimation heroRef={ref} lettersRef={lettersRef} />
-        <div className="flex items-baseline justify-between font-mono text-xs uppercase tracking-widest text-muted-foreground">
-          <span>Issue №01 — Portfolio</span>
-          <span>B.Tech ECE · CGPA 8.9</span>
+        <div className="flex items-baseline justify-between font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+          <span>Motion Study / 01</span>
+          <span className="hidden md:inline">Kola Harshavardhan · 2026</span>
         </div>
 
-        <h1 className="mt-10 font-display font-medium hero-title">
+        <h1 className="mt-7 font-display font-bold hero-title">
           <span className="block">
             <span ref={(node) => { lettersRef.current.K = node; }} className="cursor-pointer">K</span>OL<span ref={(node) => { lettersRef.current.A1 = node; }}>A</span>
           </span>
