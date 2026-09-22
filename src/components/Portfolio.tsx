@@ -144,17 +144,7 @@ function Magnetic({ children, className = "" }: { children: React.ReactNode; cla
 const ENABLE_CHARACTER_ANIMATION = true;
 
 function MiniCharacter() {
-  return (
-    <svg viewBox="0 0 32 48" aria-hidden="true" className="h-full w-full overflow-visible">
-      <circle cx="16" cy="7" r="5.5" fill="currentColor" />
-      <path d="M16 13v15" fill="none" stroke="currentColor" strokeLinecap="round" strokeWidth="2.4" />
-      <path className="runner-arm runner-arm-front" d="M16 17l8 5" fill="none" stroke="currentColor" strokeLinecap="round" strokeWidth="2.4" />
-      <path className="runner-arm runner-arm-back" d="M16 18l-7 5" fill="none" stroke="currentColor" strokeLinecap="round" strokeWidth="2.4" />
-      <path className="runner-leg runner-leg-front" d="M16 28l8 10" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.4" />
-      <path className="runner-leg runner-leg-back" d="M16 28l-8 10" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.4" />
-      <path d="M4 19h3M2 22h4" stroke="currentColor" strokeLinecap="round" strokeWidth="1.2" />
-    </svg>
-  );
+  return <span aria-hidden="true" className="block h-full w-full rounded-full bg-accent shadow-[0_0_0_8px_rgb(255_90_95/0.12),0_0_24px_rgb(255_90_95/0.7)]" />;
 }
 
 function CharacterAnimation({ heroRef, lettersRef }: { heroRef: React.RefObject<HTMLElement | null>; lettersRef: React.MutableRefObject<Record<string, HTMLSpanElement | null>> }) {
@@ -173,7 +163,7 @@ function CharacterAnimation({ heroRef, lettersRef }: { heroRef: React.RefObject<
       const next = ["K", "A1", "H", "A2", "N"].map((letter) => {
         const rect = lettersRef.current[letter]?.getBoundingClientRect();
         return rect
-          ? { x: rect.left - heroRect.left - 2, y: rect.bottom - heroRect.top - 40 }
+          ? { x: rect.left - heroRect.left + rect.width * 0.08, y: rect.bottom - heroRect.top - 22 }
           : { x: 0, y: 0 };
       });
       setPoints(next);
@@ -194,8 +184,8 @@ function CharacterAnimation({ heroRef, lettersRef }: { heroRef: React.RefObject<
   if (!ENABLE_CHARACTER_ANIMATION || reduceMotion || points.length !== 5) return null;
 
   const [k, a1, h, a2, n] = points;
-  const x = [k.x, a1.x, h.x, a2.x, n.x, "calc(100vw + 60px)"];
-  const y = [k.y, a1.y, h.y, a2.y, n.y, n.y];
+  const x = [k.x - 34, k.x, a1.x, h.x, a2.x, n.x, "calc(100vw + 60px)"];
+  const y = [k.y - 110, k.y, a1.y - 8, h.y, a2.y - 8, n.y, n.y];
 
   return (
     <>
@@ -216,25 +206,25 @@ function CharacterAnimation({ heroRef, lettersRef }: { heroRef: React.RefObject<
         <motion.div
           key={runKey}
           aria-hidden="true"
-          className="pointer-events-none absolute left-0 top-0 z-20 h-[clamp(28px,3vw,42px)] w-[clamp(19px,2vw,28px)] text-ink"
+          className="pointer-events-none absolute left-0 top-0 z-20 h-[clamp(28px,3vw,42px)] w-[clamp(28px,3vw,42px)]"
           initial={{ x: k.x, y: k.y, opacity: 1 }}
           animate={{
             x,
             y,
-            opacity: [1, 1, 1, 1, 1, 0],
-            scale: [1, 1.08, 1, 1.08, 1, 1],
-            rotate: [0, -8, 8, -8, 8, 0],
+            opacity: [1, 1, 1, 1, 1, 1, 0],
+            scale: [1, 1.08, 1, 1.08, 1, 1.08, 1],
+            rotate: [0, 180, 360, 540, 720, 900, 1080],
           }}
           transition={{
             duration: 7,
             ease: ["linear", "easeOut", "linear", "easeOut", "linear"],
-            times: [0, 0.22, 0.42, 0.6, 0.78, 1],
+            times: [0, 0.16, 0.32, 0.48, 0.64, 0.82, 1],
           }}
         >
           <motion.div
             className="h-full w-full"
-            animate={{ y: [0, -2, 0, -2, 0] }}
-            transition={{ duration: 0.28, repeat: Infinity, ease: "easeInOut" }}
+            animate={{ y: [0, -5, 0, -3, 0] }}
+            transition={{ duration: 0.42, repeat: Infinity, ease: "easeInOut" }}
           >
             <MiniCharacter />
           </motion.div>
