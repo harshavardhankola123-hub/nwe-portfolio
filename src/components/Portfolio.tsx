@@ -141,96 +141,53 @@ function Magnetic({ children, className = "" }: { children: React.ReactNode; cla
   );
 }
 
-const ENABLE_CHARACTER_ANIMATION = true;
-
-function MiniCharacter() {
+function PaperRocket() {
   return (
-    <svg viewBox="0 0 32 48" aria-hidden="true" className="h-full w-full overflow-visible">
-      <circle cx="16" cy="7" r="5.5" fill="currentColor" />
-      <path d="M16 13v15" fill="none" stroke="currentColor" strokeLinecap="round" strokeWidth="2.4" />
-      <path className="runner-arm runner-arm-front" d="M16 17l8 5" fill="none" stroke="currentColor" strokeLinecap="round" strokeWidth="2.4" />
-      <path className="runner-arm runner-arm-back" d="M16 18l-7 5" fill="none" stroke="currentColor" strokeLinecap="round" strokeWidth="2.4" />
-      <path className="runner-leg runner-leg-front" d="M16 28l8 10" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.4" />
-      <path className="runner-leg runner-leg-back" d="M16 28l-8 10" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.4" />
-      <path d="M4 19h3M2 22h4" stroke="currentColor" strokeLinecap="round" strokeWidth="1.2" />
+    <svg viewBox="0 0 80 42" aria-hidden="true" className="h-full w-full overflow-visible">
+      <path d="M8 27 62 5c7-3 13-2 15-1-1 3-3 8-9 13L16 35Z" fill="currentColor" />
+      <path d="m16 34 9-12 9 8Z" fill="currentColor" opacity=".72" />
+      <path d="m62 5-27 17 25-5c6-4 9-9 10-13Z" fill="white" opacity=".28" />
+      <circle cx="59" cy="12" r="3" fill="var(--paper)" opacity=".9" />
+      <path d="M12 30 2 39l16-5" fill="var(--accent)" />
+      <path d="M4 39c5-1 9-2 13-5" fill="none" stroke="var(--accent)" strokeLinecap="round" strokeWidth="2" />
     </svg>
   );
 }
 
-function CharacterAnimation({ heroRef, lettersRef }: { heroRef: React.RefObject<HTMLElement | null>; lettersRef: React.MutableRefObject<Record<string, HTMLSpanElement | null>> }) {
+function RocketAnimation({ heroRef, lettersRef }: { heroRef: React.RefObject<HTMLElement | null>; lettersRef: React.MutableRefObject<Record<string, HTMLSpanElement | null>> }) {
   const reduceMotion = useReducedMotion();
   const [points, setPoints] = useState<{ x: number; y: number }[]>([]);
-  const [running, setRunning] = useState(false);
+  const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
+  const smoothProgress = useSpring(scrollYProgress, { stiffness: 90, damping: 24, mass: 0.8 });
 
   useEffect(() => {
-    if (!ENABLE_CHARACTER_ANIMATION || reduceMotion) return;
-
     const measure = () => {
       const hero = heroRef.current;
       if (!hero) return;
       const heroRect = hero.getBoundingClientRect();
-      const next = ["K", "A1", "H", "A2", "N"].map((letter) => {
+      setPoints(["K", "A1", "H", "A2", "N"].map((letter) => {
         const rect = lettersRef.current[letter]?.getBoundingClientRect();
-        return rect
-          ? { x: rect.left - heroRect.left - 2, y: rect.bottom - heroRect.top - 40 }
-          : { x: 0, y: 0 };
-      });
-      setPoints(next);
+        return rect ? { x: rect.left - heroRect.left - 18, y: rect.top - heroRect.top + rect.height * 0.42 } : { x: 0, y: 0 };
+      }));
     };
-
     measure();
     const observer = new ResizeObserver(measure);
     if (heroRef.current) observer.observe(heroRef.current);
     window.addEventListener("resize", measure);
-    return () => {
-      observer.disconnect();
-      window.removeEventListener("resize", measure);
-    };
-  }, [heroRef, reduceMotion, lettersRef]);
+    return () => { observer.disconnect(); window.removeEventListener("resize", measure); };
+  }, [heroRef, lettersRef]);
 
-  if (!ENABLE_CHARACTER_ANIMATION || reduceMotion || points.length !== 5) return null;
+  const [k, a1, h, a2, n] = points.length === 5 ? points : Array.from({ length: 5 }, () => ({ x: 0, y: 0 }));
+  const x = useTransform(smoothProgress, [0, 0.2, 0.42, 0.64, 0.82, 1], [k.x, a1.x, h.x, a2.x, n.x, "calc(100vw + 80px)"]);
+  const y = useTransform(smoothProgress, [0, 0.2, 0.42, 0.64, 0.82, 1], [k.y, a1.y, h.y, a2.y, n.y, n.y]);
+  const rotate = useTransform(smoothProgress, [0, 0.2, 0.42, 0.64, 0.82, 1], [-8, 2, -4, 3, -2, 8]);
 
-  const [k, a1, h, a2, n] = points;
-  const x = [k.x, a1.x, h.x, a2.x, n.x, "calc(100vw + 60px)"];
-  const y = [k.y, a1.y, h.y, a2.y, n.y, n.y];
+  if (reduceMotion || points.length !== 5) return null;
 
   return (
-    <>
-      <button
-        type="button"
-        aria-label="Start the runner animation"
-        onClick={() => setRunning(true)}
-        style={{ left: k.x, top: k.y - 8 }}
-        className="absolute z-30 h-16 w-16 cursor-pointer bg-transparent"
-      />
-      {running && (
-        <motion.div
-          aria-hidden="true"
-          className="pointer-events-none absolute left-0 top-0 z-20 h-[clamp(28px,3vw,42px)] w-[clamp(19px,2vw,28px)] text-ink"
-          initial={{ x: k.x, y: k.y, opacity: 1 }}
-          animate={{
-            x,
-            y,
-            opacity: [1, 1, 1, 1, 1, 0],
-            scale: [1, 1.08, 1, 1.08, 1, 1],
-            rotate: [0, -8, 8, -8, 8, 0],
-          }}
-          transition={{
-            duration: 7,
-            ease: ["linear", "easeOut", "linear", "easeOut", "linear"],
-            times: [0, 0.22, 0.42, 0.6, 0.78, 1],
-          }}
-        >
-          <motion.div
-            className="h-full w-full"
-            animate={{ y: [0, -2, 0, -2, 0] }}
-            transition={{ duration: 0.28, repeat: Infinity, ease: "easeInOut" }}
-          >
-            <MiniCharacter />
-          </motion.div>
-        </motion.div>
-      )}
-    </>
+    <motion.div aria-hidden="true" className="pointer-events-none absolute left-0 top-0 z-20 h-10 w-[76px] text-accent drop-shadow-[0_5px_0_rgba(0,0,0,0.12)]" style={{ x, y, rotate }}>
+      <PaperRocket />
+    </motion.div>
   );
 }
 
@@ -255,7 +212,7 @@ function Hero() {
       </div>
 
       <motion.div style={{ y: y1, opacity: op }} className="relative z-10 px-6 pt-16 md:px-10 md:pt-24">
-        <CharacterAnimation heroRef={ref} lettersRef={lettersRef} />
+        <RocketAnimation heroRef={ref} lettersRef={lettersRef} />
         <div className="flex items-baseline justify-between font-mono text-xs uppercase tracking-widest text-muted-foreground">
           <span>Issue №01 — Portfolio</span>
           <span>B.Tech ECE · CGPA 8.9</span>
