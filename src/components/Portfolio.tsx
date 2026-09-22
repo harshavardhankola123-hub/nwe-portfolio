@@ -5,7 +5,6 @@ import { AnimatePresence, motion, useScroll, useTransform, useMotionValue, useSp
 import { useEffect, useRef, useState } from "react";
 import { useReducedMotion } from "framer-motion";
 import { ArrowUpRight, Github, Linkedin, Mail, Phone } from "lucide-react";
-import { ScrollPlaneAnimation } from "./ScrollPlaneAnimation";
 
 const projects = [
   {
@@ -525,8 +524,7 @@ export function Portfolio() {
       <ScrollProgress />
       <Cursor />
       <Hero />
-      <ScrollPlaneAnimation />
-      <Marquee items={["React Development", "Python Automation", "JavaScript Interfaces", "Java Applications", "AI Prototyping", "Workflow Automation"]} />
+          <Marquee items={["React Development", "Python Automation", "JavaScript Interfaces", "Java Applications", "AI Prototyping", "Workflow Automation"]} />
       <section className="bg-paper">
         <div className="pt-24" />
         <div className="grid grid-cols-1 gap-8 px-6 pb-16 md:grid-cols-12 md:items-end md:px-10">
