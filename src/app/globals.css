@@ -159,15 +159,4 @@
   aspect-ratio: 3 / 4;
 }
 
-/* Scroll-linked folded paper mark from the reference motion study. */
-.scroll-plane {
-  clip-path: polygon(0 45%, 100% 0, 67% 100%, 43% 61%, 0 45%, 42% 54%, 100% 0, 55% 68%);
-  background: linear-gradient(135deg, var(--color-accent) 0 38%, var(--color-signal) 39% 67%, oklch(0.72 0.18 300) 68% 100%);
-  filter: drop-shadow(0 12px 14px oklch(0 0 0 / 0.18));
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .scroll-plane { transform: none; }
-}
-
 
