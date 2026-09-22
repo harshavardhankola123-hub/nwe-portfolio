@@ -234,6 +234,50 @@ function CharacterAnimation({ heroRef, lettersRef }: { heroRef: React.RefObject<
   );
 }
 
+function HeroFlight() {
+  const reduceMotion = useReducedMotion();
+
+  return (
+    <motion.svg
+      aria-hidden="true"
+      viewBox="0 0 900 620"
+      className="pointer-events-none absolute inset-0 z-[1] h-full w-full overflow-visible opacity-90"
+      preserveAspectRatio="none"
+    >
+      <defs>
+        <linearGradient id="hero-flight-gradient" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor="var(--color-accent)" />
+          <stop offset="55%" stopColor="var(--color-signal)" />
+          <stop offset="100%" stopColor="var(--color-ink)" />
+        </linearGradient>
+      </defs>
+      <motion.path
+        d="M-30 90 C150 20 170 280 360 300 S650 170 930 45"
+        fill="none"
+        stroke="url(#hero-flight-gradient)"
+        strokeWidth="2"
+        strokeDasharray="1 14"
+        strokeLinecap="round"
+        animate={reduceMotion ? undefined : { pathLength: [0.1, 1], opacity: [0.25, 0.8, 0.25] }}
+        transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+      />
+      <motion.g
+        animate={reduceMotion ? undefined : {
+          x: [-40, 120, 300, 510, 760, 940],
+          y: [120, 50, 220, 300, 165, 35],
+          rotate: [-8, 22, 38, -12, -28, -16],
+          scale: [0.7, 0.85, 1, 0.92, 0.8, 0.7],
+        }}
+        transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+      >
+        <path d="M0 0 L56 10 L14 18 L0 0Z" fill="var(--color-accent)" />
+        <path d="M0 0 L56 10 L25 30 L14 18 L0 0Z" fill="var(--color-signal)" opacity="0.9" />
+        <path d="M14 18 L25 30 L18 12Z" fill="var(--color-ink)" opacity="0.8" />
+      </motion.g>
+    </motion.svg>
+  );
+}
+
 function Hero() {
   const ref = useRef<HTMLDivElement>(null);
   const lettersRef = useRef<Record<string, HTMLSpanElement | null>>({});
@@ -245,6 +289,7 @@ function Hero() {
   return (
     <section ref={ref} className="relative min-h-screen overflow-hidden bg-paper text-ink">
       <div className="absolute inset-0 bg-grid" />
+      <HeroFlight />
       <div className="absolute inset-0 projection" />
 
       {/* top bar */}
