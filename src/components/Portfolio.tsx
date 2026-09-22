@@ -234,6 +234,35 @@ function CharacterAnimation({ heroRef, lettersRef }: { heroRef: React.RefObject<
   );
 }
 
+function ScrollArtwork({ progress }: { progress: ReturnType<typeof useScroll>["scrollYProgress"] }) {
+  const planeX = useTransform(progress, [0, 0.28, 0.58, 1], ["18vw", "42vw", "62vw", "88vw"]);
+  const planeY = useTransform(progress, [0, 0.28, 0.58, 1], ["9rem", "15rem", "27rem", "36rem"]);
+  const planeRotate = useTransform(progress, [0, 0.28, 0.58, 1], [-18, 8, -10, 20]);
+  const lineRotate = useTransform(progress, [0, 0.5, 1], [-12, 18, 42]);
+  const planeScale = useTransform(progress, [0, 0.5, 1], [1, 1.08, 0.82]);
+  const planeOpacity = useTransform(progress, [0, 0.08, 0.88, 1], [0.9, 1, 1, 0]);
+
+  return (
+    <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-20 overflow-hidden">
+      <motion.svg
+        viewBox="0 0 420 180"
+        className="absolute left-[12vw] top-[18rem] h-[clamp(6rem,14vw,12rem)] w-[clamp(18rem,38vw,30rem)] opacity-80"
+        style={{ rotate: lineRotate }}
+      >
+        <path d="M8 136 C 98 168, 190 142, 304 30" fill="none" stroke="var(--color-accent)" strokeLinecap="round" strokeWidth="2" />
+        <path d="M8 143 C 98 175, 194 149, 310 36" fill="none" stroke="var(--color-signal)" strokeLinecap="round" strokeWidth="1" opacity="0.7" />
+      </motion.svg>
+      <motion.div
+        className="absolute left-0 top-0 h-[clamp(5rem,9vw,8rem)] w-[clamp(8rem,14vw,12rem)]"
+        style={{ x: planeX, y: planeY, rotate: planeRotate, scale: planeScale, opacity: planeOpacity }}
+      >
+        <div className="scroll-plane h-full w-full" />
+        <div className="absolute inset-[18%_17%_22%_20%] -skew-x-12 border-b-2 border-paper/70" />
+      </motion.div>
+    </div>
+  );
+}
+
 function Hero() {
   const ref = useRef<HTMLDivElement>(null);
   const lettersRef = useRef<Record<string, HTMLSpanElement | null>>({});
@@ -246,6 +275,7 @@ function Hero() {
     <section ref={ref} className="relative min-h-screen overflow-hidden bg-paper text-ink">
       <div className="absolute inset-0 bg-grid" />
       <div className="absolute inset-0 projection" />
+      <ScrollArtwork progress={scrollYProgress} />
 
       {/* top bar */}
       <div className="relative z-10 flex items-center justify-between border-b border-foreground/15 px-6 py-4 font-mono text-xs uppercase tracking-widest md:px-10">
