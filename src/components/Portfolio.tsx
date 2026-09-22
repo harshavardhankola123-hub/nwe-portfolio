@@ -162,7 +162,10 @@ function PaperPlane() {
 function CharacterAnimation({ heroRef, lettersRef }: { heroRef: React.RefObject<HTMLElement | null>; lettersRef: React.MutableRefObject<Record<string, HTMLSpanElement | null>> }) {
   const reduceMotion = useReducedMotion();
   const [points, setPoints] = useState<{ x: number; y: number }[]>([]);
-  const [running, setRunning] = useState(false);
+  const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+  const rotate = useMotionValue(0);
 
   useEffect(() => {
     if (!ENABLE_CHARACTER_ANIMATION || reduceMotion) return;
@@ -171,13 +174,10 @@ function CharacterAnimation({ heroRef, lettersRef }: { heroRef: React.RefObject<
       const hero = heroRef.current;
       if (!hero) return;
       const heroRect = hero.getBoundingClientRect();
-      const next = ["K", "A1", "H", "A2", "N"].map((letter) => {
+      setPoints(["K", "A1", "H", "A2", "N"].map((letter) => {
         const rect = lettersRef.current[letter]?.getBoundingClientRect();
-        return rect
-          ? { x: rect.left - heroRect.left - 2, y: rect.bottom - heroRect.top - 40 }
-          : { x: 0, y: 0 };
-      });
-      setPoints(next);
+        return rect ? { x: rect.left - heroRect.left - 2, y: rect.bottom - heroRect.top - 40 } : { x: 0, y: 0 };
+      }));
     };
 
     measure();
@@ -190,49 +190,32 @@ function CharacterAnimation({ heroRef, lettersRef }: { heroRef: React.RefObject<
     };
   }, [heroRef, reduceMotion, lettersRef]);
 
+  useEffect(() => {
+    if (points.length !== 5 || reduceMotion) return;
+    return scrollYProgress.on("change", (progress) => {
+      const scaled = Math.min(progress, 0.9999) * 5;
+      const index = Math.floor(scaled);
+      const amount = scaled - index;
+      const from = points[index];
+      const to = points[Math.min(index + 1, 4)];
+      x.set(from.x + (to.x - from.x) * amount);
+      y.set(from.y + (to.y - from.y) * amount);
+      rotate.set((to.x - from.x) * -0.06);
+    });
+  }, [points, reduceMotion, scrollYProgress, x, y, rotate]);
+
   if (!ENABLE_CHARACTER_ANIMATION || reduceMotion || points.length !== 5) return null;
 
-  const [k, a1, h, a2, n] = points;
-  const x = [k.x, a1.x, h.x, a2.x, n.x, "calc(100vw + 60px)"];
-  const y = [k.y, a1.y, h.y, a2.y, n.y, n.y];
-
   return (
-    <>
-      <button
-        type="button"
-        aria-label="Start the runner animation"
-        onClick={() => setRunning(true)}
-        style={{ left: k.x, top: k.y - 8 }}
-        className="absolute z-30 h-16 w-16 cursor-pointer bg-transparent"
-      />
-      {running && (
-        <motion.div
-          aria-hidden="true"
-          className="pointer-events-none absolute left-0 top-0 z-20 h-[clamp(28px,3vw,42px)] w-[clamp(44px,5vw,64px)] text-ink"
-          initial={{ x: k.x, y: k.y, opacity: 1 }}
-          animate={{
-            x,
-            y,
-            opacity: [1, 1, 1, 1, 1, 0],
-            scale: [1, 1.08, 1, 1.08, 1, 1],
-            rotate: [0, -8, 8, -8, 8, 0],
-          }}
-          transition={{
-            duration: 7,
-            ease: ["linear", "easeOut", "linear", "easeOut", "linear"],
-            times: [0, 0.22, 0.42, 0.6, 0.78, 1],
-          }}
-        >
-          <motion.div
-            className="h-full w-full"
-            animate={{ y: [0, -2, 0, -2, 0] }}
-            transition={{ duration: 0.28, repeat: Infinity, ease: "easeInOut" }}
-          >
-            <PaperPlane />
-          </motion.div>
-        </motion.div>
-      )}
-    </>
+    <motion.div
+      aria-hidden="true"
+      className="pointer-events-none absolute left-0 top-0 z-20 h-[clamp(28px,3vw,42px)] w-[clamp(44px,5vw,64px)] text-ink"
+      style={{ x, y, rotate }}
+    >
+      <motion.div className="h-full w-full" animate={{ y: [0, -2, 0, -2, 0] }} transition={{ duration: 0.28, repeat: Infinity, ease: "easeInOut" }}>
+        <PaperPlane />
+      </motion.div>
+    </motion.div>
   );
 }
 
