@@ -161,6 +161,7 @@ function CharacterAnimation({ heroRef, lettersRef }: { heroRef: React.RefObject<
   const reduceMotion = useReducedMotion();
   const [points, setPoints] = useState<{ x: number; y: number }[]>([]);
   const [running, setRunning] = useState(false);
+  const [runKey, setRunKey] = useState(0);
 
   useEffect(() => {
     if (!ENABLE_CHARACTER_ANIMATION || reduceMotion) return;
@@ -179,10 +180,12 @@ function CharacterAnimation({ heroRef, lettersRef }: { heroRef: React.RefObject<
     };
 
     measure();
+    const start = window.requestAnimationFrame(() => setRunning(true));
     const observer = new ResizeObserver(measure);
     if (heroRef.current) observer.observe(heroRef.current);
     window.addEventListener("resize", measure);
     return () => {
+      window.cancelAnimationFrame(start);
       observer.disconnect();
       window.removeEventListener("resize", measure);
     };
@@ -199,12 +202,19 @@ function CharacterAnimation({ heroRef, lettersRef }: { heroRef: React.RefObject<
       <button
         type="button"
         aria-label="Start the runner animation"
-        onClick={() => setRunning(true)}
+        onClick={() => {
+          setRunning(false);
+          window.requestAnimationFrame(() => {
+            setRunKey((key) => key + 1);
+            setRunning(true);
+          });
+        }}
         style={{ left: k.x, top: k.y - 8 }}
         className="absolute z-30 h-16 w-16 cursor-pointer bg-transparent"
       />
       {running && (
         <motion.div
+          key={runKey}
           aria-hidden="true"
           className="pointer-events-none absolute left-0 top-0 z-20 h-[clamp(28px,3vw,42px)] w-[clamp(19px,2vw,28px)] text-ink"
           initial={{ x: k.x, y: k.y, opacity: 1 }}
