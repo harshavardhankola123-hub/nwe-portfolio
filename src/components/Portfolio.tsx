@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { AnimatePresence, motion, useScroll, useTransform, useMotionValue, useSpring, MotionStyle } from "framer-motion";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type RefObject } from "react";
 import { useReducedMotion } from "framer-motion";
 import { ArrowUpRight, Github, Linkedin, Mail, Phone } from "lucide-react";
 
@@ -234,16 +234,19 @@ function CharacterAnimation({ heroRef, lettersRef }: { heroRef: React.RefObject<
   );
 }
 
-function HeroFlight() {
+function HeroFlight({ target }: { target: RefObject<HTMLDivElement | null> }) {
   const reduceMotion = useReducedMotion();
+  const { scrollYProgress } = useScroll({ target, offset: ["start start", "end start"] });
+  const rawX = useTransform(scrollYProgress, [0, 0.28, 0.58, 0.82, 1], [-45, 120, 360, 650, 940]);
+  const rawY = useTransform(scrollYProgress, [0, 0.28, 0.58, 0.82, 1], [118, 48, 290, 160, 30]);
+  const rawRotate = useTransform(scrollYProgress, [0, 0.28, 0.58, 0.82, 1], [-8, 20, 38, -24, -12]);
+  const x = useSpring(rawX, { stiffness: 55, damping: 18, mass: 0.8 });
+  const y = useSpring(rawY, { stiffness: 55, damping: 18, mass: 0.8 });
+  const rotate = useSpring(rawRotate, { stiffness: 55, damping: 18, mass: 0.8 });
+  const trailOpacity = useTransform(scrollYProgress, [0, 0.12, 0.85, 1], [0.35, 0.8, 0.8, 0]);
 
   return (
-    <motion.svg
-      aria-hidden="true"
-      viewBox="0 0 900 620"
-      className="pointer-events-none absolute inset-0 z-[1] h-full w-full overflow-visible opacity-90"
-      preserveAspectRatio="none"
-    >
+    <motion.svg aria-hidden="true" viewBox="0 0 900 620" className="pointer-events-none absolute inset-0 z-[1] h-full w-full overflow-visible" preserveAspectRatio="none">
       <defs>
         <linearGradient id="hero-flight-gradient" x1="0" y1="0" x2="1" y2="1">
           <stop offset="0%" stopColor="var(--color-accent)" />
@@ -258,18 +261,9 @@ function HeroFlight() {
         strokeWidth="2"
         strokeDasharray="1 14"
         strokeLinecap="round"
-        animate={reduceMotion ? undefined : { pathLength: [0.1, 1], opacity: [0.25, 0.8, 0.25] }}
-        transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+        style={{ opacity: reduceMotion ? 0.4 : trailOpacity }}
       />
-      <motion.g
-        animate={reduceMotion ? undefined : {
-          x: [-40, 120, 300, 510, 760, 940],
-          y: [120, 50, 220, 300, 165, 35],
-          rotate: [-8, 22, 38, -12, -28, -16],
-          scale: [0.7, 0.85, 1, 0.92, 0.8, 0.7],
-        }}
-        transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-      >
+      <motion.g style={reduceMotion ? undefined : { x, y, rotate }}>
         <path d="M0 0 L56 10 L14 18 L0 0Z" fill="var(--color-accent)" />
         <path d="M0 0 L56 10 L25 30 L14 18 L0 0Z" fill="var(--color-signal)" opacity="0.9" />
         <path d="M14 18 L25 30 L18 12Z" fill="var(--color-ink)" opacity="0.8" />
@@ -289,7 +283,7 @@ function Hero() {
   return (
     <section ref={ref} className="relative min-h-screen overflow-hidden bg-paper text-ink">
       <div className="absolute inset-0 bg-grid" />
-      <HeroFlight />
+      <HeroFlight target={ref} />
       <div className="absolute inset-0 projection" />
 
       {/* top bar */}
