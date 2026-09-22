@@ -206,7 +206,7 @@ function CharacterAnimation({ heroRef, lettersRef }: { heroRef: React.RefObject<
       {running && (
         <motion.div
           aria-hidden="true"
-          className="pointer-events-none absolute left-0 top-0 z-20 h-[clamp(28px,3vw,42px)] w-[clamp(19px,2vw,28px)] text-ink"
+          className="pointer-events-none absolute left-0 top-0 z-20 h-[clamp(28px,3vw,42px)] w-[clamp(19px,2vw,28px)] text-black"
           initial={{ x: k.x, y: k.y, opacity: 1 }}
           animate={{
             x,
@@ -260,7 +260,7 @@ function ScrollArtwork({ progress }: { progress: ReturnType<typeof useScroll>["s
         <img
           src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-kBD0sMbp7qO6J1irb8WIEM7gR7scdx.png"
           alt="Black Vardhan typography on a light grid"
-          className="h-full w-full object-cover object-center grayscale"
+          className="h-full w-full object-cover object-center"
         />
       </motion.div>
     </div>
