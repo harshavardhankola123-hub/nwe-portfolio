@@ -156,19 +156,23 @@ function PaperRocket() {
 
 function RocketAnimation({ heroRef, lettersRef }: { heroRef: React.RefObject<HTMLElement | null>; lettersRef: React.MutableRefObject<Record<string, HTMLSpanElement | null>> }) {
   const reduceMotion = useReducedMotion();
-  const [points, setPoints] = useState<{ x: number; y: number }[]>([]);
+  const [flight, setFlight] = useState({ width: 0, height: 0, start: { x: 0, y: 0 } });
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
-  const smoothProgress = useSpring(scrollYProgress, { stiffness: 90, damping: 24, mass: 0.8 });
+  const smoothProgress = useSpring(scrollYProgress, { stiffness: 72, damping: 22, mass: 0.8 });
 
   useEffect(() => {
     const measure = () => {
       const hero = heroRef.current;
       if (!hero) return;
       const heroRect = hero.getBoundingClientRect();
-      setPoints(["K", "A1", "H", "A2", "N"].map((letter) => {
-        const rect = lettersRef.current[letter]?.getBoundingClientRect();
-        return rect ? { x: rect.left - heroRect.left - 18, y: rect.top - heroRect.top + rect.height * 0.42 } : { x: 0, y: 0 };
-      }));
+      const vardhan = lettersRef.current.V?.getBoundingClientRect();
+      setFlight({
+        width: heroRect.width,
+        height: heroRect.height,
+        start: vardhan
+          ? { x: vardhan.left - heroRect.left - 8, y: vardhan.top - heroRect.top + vardhan.height * 0.72 }
+          : { x: heroRect.width * 0.04, y: heroRect.height * 0.65 },
+      });
     };
     measure();
     const observer = new ResizeObserver(measure);
@@ -177,17 +181,23 @@ function RocketAnimation({ heroRef, lettersRef }: { heroRef: React.RefObject<HTM
     return () => { observer.disconnect(); window.removeEventListener("resize", measure); };
   }, [heroRef, lettersRef]);
 
-  const [k, a1, h, a2, n] = points.length === 5 ? points : Array.from({ length: 5 }, () => ({ x: 0, y: 0 }));
-  const x = useTransform(smoothProgress, [0, 0.2, 0.42, 0.64, 0.82, 1], [k.x, a1.x, h.x, a2.x, n.x, "calc(100vw + 80px)"]);
-  const y = useTransform(smoothProgress, [0, 0.2, 0.42, 0.64, 0.82, 1], [k.y, a1.y, h.y, a2.y, n.y, n.y]);
-  const rotate = useTransform(smoothProgress, [0, 0.2, 0.42, 0.64, 0.82, 1], [-8, 2, -4, 3, -2, 8]);
+  const { width, height, start } = flight;
+  const x = useTransform(smoothProgress, [0, 0.22, 0.48, 0.72, 1], [start.x, width * 0.28, width * 0.55, width * 0.76, width + 90]);
+  const y = useTransform(smoothProgress, [0, 0.22, 0.48, 0.72, 1], [start.y, height * 0.35, height * 0.12, height * 0.38, height * 0.22]);
+  const rotate = useTransform(smoothProgress, [0, 0.22, 0.48, 0.72, 1], [-30, -8, 14, 30, 42]);
+  const trail = useTransform(smoothProgress, [0, 1], [1, 0]);
 
-  if (reduceMotion || points.length !== 5) return null;
+  if (reduceMotion || !width) return null;
 
   return (
-    <motion.div aria-hidden="true" className="pointer-events-none absolute left-0 top-0 z-20 h-10 w-[76px] text-accent drop-shadow-[0_5px_0_rgba(0,0,0,0.12)]" style={{ x, y, rotate }}>
-      <PaperRocket />
-    </motion.div>
+    <>
+      <motion.svg aria-hidden="true" className="pointer-events-none absolute inset-0 z-[9] h-full w-full overflow-visible" viewBox="0 0 100 100" preserveAspectRatio="none" style={{ opacity: trail }}>
+        <path d="M 5 69 C 18 22, 42 4, 61 19 S 75 55, 91 26" fill="none" stroke="var(--color-accent)" strokeLinecap="round" strokeWidth="0.35" pathLength="1" strokeDasharray="0.74 0.26" />
+      </motion.svg>
+      <motion.div aria-hidden="true" className="pointer-events-none absolute left-0 top-0 z-20 h-10 w-[76px] text-accent drop-shadow-[0_5px_0_rgba(0,0,0,0.12)]" style={{ x, y, rotate }}>
+        <PaperRocket />
+      </motion.div>
+    </>
   );
 }
 
@@ -226,7 +236,7 @@ function Hero() {
             <span ref={(node) => { lettersRef.current.H = node; }}>H</span>ARSH<span ref={(node) => { lettersRef.current.A2 = node; }}>A</span>&mdash;
           </span>
           <span className="block">
-            VARDHA<span ref={(node) => { lettersRef.current.N = node; }}>N</span><span className="text-accent">.</span>
+              <span ref={(node) => { lettersRef.current.V = node; }}>V</span>ARDHA<span ref={(node) => { lettersRef.current.N = node; }}>N</span><span className="text-accent">.</span>
           </span>
         </h1>
       </motion.div>
