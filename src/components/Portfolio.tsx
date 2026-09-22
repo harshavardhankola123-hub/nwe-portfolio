@@ -143,16 +143,18 @@ function Magnetic({ children, className = "" }: { children: React.ReactNode; cla
 
 const ENABLE_CHARACTER_ANIMATION = true;
 
-function MiniCharacter() {
+function PaperPlane() {
   return (
-    <svg viewBox="0 0 32 48" aria-hidden="true" className="h-full w-full overflow-visible">
-      <circle cx="16" cy="7" r="5.5" fill="currentColor" />
-      <path d="M16 13v15" fill="none" stroke="currentColor" strokeLinecap="round" strokeWidth="2.4" />
-      <path className="runner-arm runner-arm-front" d="M16 17l8 5" fill="none" stroke="currentColor" strokeLinecap="round" strokeWidth="2.4" />
-      <path className="runner-arm runner-arm-back" d="M16 18l-7 5" fill="none" stroke="currentColor" strokeLinecap="round" strokeWidth="2.4" />
-      <path className="runner-leg runner-leg-front" d="M16 28l8 10" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.4" />
-      <path className="runner-leg runner-leg-back" d="M16 28l-8 10" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.4" />
-      <path d="M4 19h3M2 22h4" stroke="currentColor" strokeLinecap="round" strokeWidth="1.2" />
+    <svg viewBox="0 0 64 42" aria-hidden="true" className="h-full w-full overflow-visible">
+      <defs>
+        <linearGradient id="plane-gradient" x1="0" x2="1" y1="0" y2="1">
+          <stop offset="0" stopColor="#f4b8ff" />
+          <stop offset="1" stopColor="#48c9ff" />
+        </linearGradient>
+      </defs>
+      <path d="M2 20 61 2 39 39 29 25 2 20Z" fill="url(#plane-gradient)" />
+      <path d="m29 25 32-23-22 37-10-14Z" fill="#b56cff" opacity=".72" />
+      <path d="m2 20 27 5 32-23" fill="none" stroke="#f6eaff" strokeWidth="1.2" />
     </svg>
   );
 }
@@ -206,7 +208,7 @@ function CharacterAnimation({ heroRef, lettersRef }: { heroRef: React.RefObject<
       {running && (
         <motion.div
           aria-hidden="true"
-          className="pointer-events-none absolute left-0 top-0 z-20 h-[clamp(28px,3vw,42px)] w-[clamp(19px,2vw,28px)] text-ink"
+          className="pointer-events-none absolute left-0 top-0 z-20 h-[clamp(28px,3vw,42px)] w-[clamp(44px,5vw,64px)] text-ink"
           initial={{ x: k.x, y: k.y, opacity: 1 }}
           animate={{
             x,
@@ -226,7 +228,7 @@ function CharacterAnimation({ heroRef, lettersRef }: { heroRef: React.RefObject<
             animate={{ y: [0, -2, 0, -2, 0] }}
             transition={{ duration: 0.28, repeat: Infinity, ease: "easeInOut" }}
           >
-            <MiniCharacter />
+            <PaperPlane />
           </motion.div>
         </motion.div>
       )}
