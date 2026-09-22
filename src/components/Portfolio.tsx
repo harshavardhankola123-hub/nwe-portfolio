@@ -235,29 +235,33 @@ function CharacterAnimation({ heroRef, lettersRef }: { heroRef: React.RefObject<
 }
 
 function ScrollArtwork({ progress }: { progress: ReturnType<typeof useScroll>["scrollYProgress"] }) {
-  const planeX = useTransform(progress, [0, 0.28, 0.58, 1], ["18vw", "42vw", "62vw", "88vw"]);
-  const planeY = useTransform(progress, [0, 0.28, 0.58, 1], ["9rem", "15rem", "27rem", "36rem"]);
-  const planeRotate = useTransform(progress, [0, 0.28, 0.58, 1], [-18, 8, -10, 20]);
-  const lineRotate = useTransform(progress, [0, 0.5, 1], [-12, 18, 42]);
-  const planeScale = useTransform(progress, [0, 0.5, 1], [1, 1.08, 0.82]);
-  const planeOpacity = useTransform(progress, [0, 0.08, 0.88, 1], [0.9, 1, 1, 0]);
+  const smoothProgress = useSpring(progress, { stiffness: 90, damping: 24, mass: 0.35 });
+  const imageX = useTransform(smoothProgress, [0, 0.24, 0.5, 0.76, 1], ["-8vw", "18vw", "42vw", "68vw", "108vw"]);
+  const imageY = useTransform(smoothProgress, [0, 0.24, 0.5, 0.76, 1], ["3rem", "9rem", "18rem", "30rem", "42rem"]);
+  const imageRotate = useTransform(smoothProgress, [0, 0.24, 0.5, 0.76, 1], [-8, 4, -7, 8, 18]);
+  const imageScale = useTransform(smoothProgress, [0, 0.5, 1], [1, 1.06, 0.86]);
+  const imageOpacity = useTransform(smoothProgress, [0, 0.05, 0.82, 1], [1, 1, 1, 0]);
+  const lineRotate = useTransform(smoothProgress, [0, 0.5, 1], [-12, 18, 42]);
 
   return (
     <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-20 overflow-hidden">
       <motion.svg
         viewBox="0 0 420 180"
-        className="absolute left-[12vw] top-[18rem] h-[clamp(6rem,14vw,12rem)] w-[clamp(18rem,38vw,30rem)] opacity-80"
+        className="absolute left-[12vw] top-[18rem] h-[clamp(6rem,14vw,12rem)] w-[clamp(18rem,38vw,30rem)] opacity-55"
         style={{ rotate: lineRotate }}
       >
-        <path d="M8 136 C 98 168, 190 142, 304 30" fill="none" stroke="var(--color-accent)" strokeLinecap="round" strokeWidth="2" />
-        <path d="M8 143 C 98 175, 194 149, 310 36" fill="none" stroke="var(--color-signal)" strokeLinecap="round" strokeWidth="1" opacity="0.7" />
+        <path d="M8 136 C 98 168, 190 142, 304 30" fill="none" stroke="var(--color-ink)" strokeLinecap="round" strokeWidth="2" />
+        <path d="M8 143 C 98 175, 194 149, 310 36" fill="none" stroke="var(--color-ink)" strokeLinecap="round" strokeWidth="1" opacity="0.45" />
       </motion.svg>
       <motion.div
-        className="absolute left-0 top-0 h-[clamp(5rem,9vw,8rem)] w-[clamp(8rem,14vw,12rem)]"
-        style={{ x: planeX, y: planeY, rotate: planeRotate, scale: planeScale, opacity: planeOpacity }}
+        className="absolute left-0 top-0 h-[clamp(7rem,14vw,12rem)] w-[clamp(15rem,28vw,24rem)] overflow-hidden bg-paper shadow-[12px_12px_0_var(--color-ink)]"
+        style={{ x: imageX, y: imageY, rotate: imageRotate, scale: imageScale, opacity: imageOpacity }}
       >
-        <div className="scroll-plane h-full w-full" />
-        <div className="absolute inset-[18%_17%_22%_20%] -skew-x-12 border-b-2 border-paper/70" />
+        <img
+          src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-kBD0sMbp7qO6J1irb8WIEM7gR7scdx.png"
+          alt="Black Vardhan typography on a light grid"
+          className="h-full w-full object-cover object-center grayscale"
+        />
       </motion.div>
     </div>
   );
