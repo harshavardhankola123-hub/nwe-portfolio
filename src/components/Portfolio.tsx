@@ -240,9 +240,9 @@ function HeroFlight({ target }: { target: RefObject<HTMLDivElement | null> }) {
   const rawX = useTransform(scrollYProgress, [0, 0.28, 0.58, 0.82, 1], [-45, 120, 360, 650, 940]);
   const rawY = useTransform(scrollYProgress, [0, 0.28, 0.58, 0.82, 1], [118, 48, 290, 160, 30]);
   const rawRotate = useTransform(scrollYProgress, [0, 0.28, 0.58, 0.82, 1], [-8, 20, 38, -24, -12]);
-  const x = useSpring(rawX, { stiffness: 55, damping: 18, mass: 0.8 });
-  const y = useSpring(rawY, { stiffness: 55, damping: 18, mass: 0.8 });
-  const rotate = useSpring(rawRotate, { stiffness: 55, damping: 18, mass: 0.8 });
+  const x = useSpring(rawX, { stiffness: 120, damping: 22, mass: 0.35 });
+  const y = useSpring(rawY, { stiffness: 120, damping: 22, mass: 0.35 });
+  const rotate = useSpring(rawRotate, { stiffness: 120, damping: 22, mass: 0.35 });
   const trailOpacity = useTransform(scrollYProgress, [0, 0.12, 0.85, 1], [0.35, 0.8, 0.8, 0]);
 
   return (
@@ -263,11 +263,16 @@ function HeroFlight({ target }: { target: RefObject<HTMLDivElement | null> }) {
         strokeLinecap="round"
         style={{ opacity: reduceMotion ? 0.4 : trailOpacity }}
       />
-      <motion.g style={reduceMotion ? undefined : { x, y, rotate }}>
-        <path d="M0 0 L56 10 L14 18 L0 0Z" fill="var(--color-accent)" />
-        <path d="M0 0 L56 10 L25 30 L14 18 L0 0Z" fill="var(--color-signal)" opacity="0.9" />
-        <path d="M14 18 L25 30 L18 12Z" fill="var(--color-ink)" opacity="0.8" />
-      </motion.g>
+      <motion.image
+        href="/images/skull-rocket.png"
+        x="-34"
+        y="-34"
+        width="68"
+        height="68"
+        preserveAspectRatio="xMidYMid meet"
+        aria-label="Skull and crossbones emblem moving along the flight path"
+        style={reduceMotion ? undefined : { x, y, rotate }}
+      />
     </motion.svg>
   );
 }
