@@ -429,6 +429,67 @@ function ProfileCard() {
   );
 }
 
+function WindmillScrollSection() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const reduceMotion = useReducedMotion();
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start center", "end center"],
+  });
+  const rotation = useTransform(scrollYProgress, [0, 1], [0, reduceMotion ? 0 : 900]);
+  const progress = useTransform(scrollYProgress, [0, 1], [0, 100]);
+
+  return (
+    <section ref={sectionRef} id="pin-windmill-wrap" className="relative h-[190vh] bg-paper text-ink">
+      <div className="sticky top-0 flex h-screen items-center justify-center overflow-hidden">
+        <div className="absolute inset-0 bg-grid opacity-60" />
+        <div className="relative z-10 grid w-full max-w-6xl grid-cols-1 gap-10 px-6 md:grid-cols-12 md:px-10">
+          <div className="md:col-span-4">
+            <div className="flex items-center gap-4 font-mono text-xs uppercase tracking-widest text-muted-foreground">
+              <span>§ 02.5</span><span className="h-px flex-1 bg-foreground/20" /><span>Scroll study</span>
+            </div>
+            <h2 className="mt-8 max-w-sm font-display text-6xl font-medium leading-[0.88] tracking-tight md:text-8xl">
+              Make it <span className="font-serif italic text-accent">move.</span>
+            </h2>
+            <p className="mt-6 max-w-xs font-mono text-xs uppercase leading-relaxed tracking-widest text-muted-foreground">
+              Scroll through the frame to wind the system forward.
+            </p>
+          </div>
+
+          <div className="relative flex min-h-[24rem] items-center justify-center md:col-span-8 md:min-h-[34rem]">
+            <div className="absolute h-[min(72vw,32rem)] w-[min(72vw,32rem)] rounded-full border border-foreground/15" />
+            <div className="absolute h-[min(52vw,23rem)] w-[min(52vw,23rem)] rounded-full border border-dashed border-accent/50" />
+            <motion.svg
+              id="pin-windmill-svg"
+              viewBox="0 0 360 360"
+              role="img"
+              aria-label="A windmill rotating as the page scrolls"
+              className="relative h-[min(72vw,32rem)] w-[min(72vw,32rem)] text-ink"
+              style={{ rotate: rotation }}
+            >
+              <circle cx="180" cy="180" r="18" fill="currentColor" />
+              <circle cx="180" cy="180" r="9" fill="var(--color-accent)" />
+              {[0, 90, 180, 270].map((angle) => (
+                <path
+                  key={angle}
+                  d="M180 163 C155 126 128 90 96 61 C137 72 169 101 180 145 Z"
+                  fill="var(--color-accent)"
+                  opacity="0.92"
+                  transform={`rotate(${angle} 180 180)`}
+                />
+              ))}
+              <circle cx="180" cy="180" r="158" fill="none" stroke="currentColor" strokeWidth="1" strokeDasharray="2 10" opacity="0.35" />
+            </motion.svg>
+            <div className="absolute bottom-2 left-1/2 -translate-x-1/2 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+              <motion.span>{progress}</motion.span>% / scrub
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function Skills() {
   return (
     <section className="relative bg-ink py-24 text-paper md:py-32">
@@ -655,6 +716,7 @@ export function Portfolio() {
         </AnimatePresence>
       </section>
       <Marquee reverse items={["Adaptive Learning", "Conversational AI", "Medical AI Support", "Predictive Tracking", "LLM Feedback", "Accessible Dashboards"]} />
+      <WindmillScrollSection />
       <Skills />
       <About />
       <Contact />
