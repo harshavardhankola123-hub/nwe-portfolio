@@ -159,35 +159,5 @@
   aspect-ratio: 3 / 4;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .scroll-plane-section { min-height: 100vh; }
-}
-
-.plane-section {
-  position: relative;
-  min-height: 100vh;
-  overflow: hidden;
-  isolation: isolate;
-  background: #090a0a;
-  color: #f7f2df;
-}
-.plane-background { position: absolute; inset: 0; z-index: -1; background: radial-gradient(circle at 20% 80%, rgba(165,100,255,.08), transparent 32%); }
-.top-line { position: absolute; top: 8px; left: 3%; right: 3%; height: 1px; background: rgba(255,255,255,.16); }
-.top-description { position: absolute; top: 32px; left: 50%; width: 100%; transform: translateX(-50%); text-align: center; color: #f6f0dd; font-size: clamp(14px, 1.5vw, 28px); line-height: 1.25; font-weight: 500; }
-.main-copy { position: absolute; top: 37vh; left: 6vw; z-index: 5; }
-.small-label { margin-bottom: 18px; color: #d37be7; font-size: clamp(22px, 2.5vw, 45px); font-weight: 500; }
-.main-copy h2, .second-copy h3 { margin: 0; color: #f7f2df; font-size: clamp(56px, 7.5vw, 145px); line-height: .92; letter-spacing: -.065em; font-weight: 500; }
-.second-copy { position: absolute; right: 7vw; top: 68vh; z-index: 6; opacity: 0; }
-.second-copy h3 { font-size: clamp(40px, 5vw, 90px); font-weight: 400; }
-.second-copy p { margin-top: 35px; color: #c8c2b0; font-size: 18px; line-height: 1.4; }
-.flight-trail { position: absolute; inset: 0; z-index: 2; width: 100%; height: 100%; pointer-events: none; }
-.paper-plane { position: absolute; top: 45vh; left: 3vw; z-index: 10; width: 230px; transform-origin: center; color: #d69aff; }
-.plane-svg { width: 100%; height: auto; filter: drop-shadow(0 12px 25px rgba(180,100,255,.25)); }
-.bottom-decoration { position: absolute; bottom: -60px; left: 10vw; width: 500px; height: 100px; transform: rotate(-8deg); }
-.bottom-decoration span { position: absolute; width: 100%; height: 2px; border-radius: 100%; background: #d895ff; }
-.bottom-decoration span:first-child { top: 25px; } .bottom-decoration span:last-child { top: 35px; opacity: .6; }
-:root { --plane-main: #d99cff; --plane-light: #b9edff; --plane-dark: #70439b; --plane-fold: #d9f4ff; --plane-trail: #d998ff; }
-@media (max-width: 768px) { .top-description { top: 28px; padding: 0 20px; font-size: 14px; } .main-copy { left: 7vw; top: 35vh; } .paper-plane { width: 130px; left: 5vw; top: 48vh; } .second-copy { left: 7vw; right: auto; top: 65vh; max-width: 90%; } .second-copy h3 { font-size: 9vw; } .second-copy p { font-size: 14px; } }
-@media (prefers-reduced-motion: reduce) { .plane-section { min-height: 100vh; } .paper-plane, .flight-trail, .second-copy { transform: none !important; } }
 
 
